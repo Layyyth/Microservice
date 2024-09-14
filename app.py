@@ -5,7 +5,7 @@ import pickle
 app = Flask(__name__)
 
 # Load the trained models (update with your actual model file path)
-model_filename = '/Users/layth/Documents/Developer/Diet-Recommendation-Prototype/trained-models/mealPredictingModel_2024-09-13_10-55-51.pkl'
+model_filename = 'trained-models/mealPredictingModel_2024-09-13_10-55-51.pkl'
 with open(model_filename, 'rb') as model_file:
     models = pickle.load(model_file)
 
@@ -21,7 +21,7 @@ def load_allergen_mapping(allergen_csv_path):
     allergen_mapping = allergen_df.groupby('food')['allergen'].apply(list).to_dict()
     return allergen_mapping
 
-allergen_csv_path = '/Users/layth/Documents/Developer/Diet-Recommendation-Prototype/Allergens.csv'
+allergen_csv_path = 'Allergens.csv'
 allergen_mapping = load_allergen_mapping(allergen_csv_path)
 
 # Load the meals data from 'Meals.csv'
@@ -30,7 +30,7 @@ def load_meals(meals_csv_path):
     meals_df['ingredients'] = meals_df['ingredients'].apply(lambda x: [i.strip().lower() for i in x.split(',')])
     return meals_df
 
-meals_csv_path = '/Users/layth/Documents/Developer/Diet-Recommendation-Prototype/Meals.csv'
+meals_csv_path = 'Meals.csv'
 meals_df = load_meals(meals_csv_path)
 
 # Function to create features for ingredients
