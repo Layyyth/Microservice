@@ -1,13 +1,13 @@
 from flask import Flask, request, jsonify, render_template
 import pandas as pd
 import pickle
-# Import functions from caloriesLogic.py
+import os
 from caloriesLogic import get_daily_calories, validate_user_data
 
 app = Flask(__name__)
 
 # Load the trained models (update with your actual model file path)
-model_filename = '/Users/layth/Documents/Developer/Diet-Recommendation-Prototype/trained-models/mealPredictingModel_2024-09-21_08-01-49.pkl'
+model_filename = 'mealPredictingModel_2024-09-21_08-01-49.pkl'
 with open(model_filename, 'rb') as model_file:
     models = pickle.load(model_file)
 
@@ -98,4 +98,5 @@ def predict():
     return jsonify({'safe_meals': safe_meals, 'daily_calories': daily_calories})
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5001, debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=True)
