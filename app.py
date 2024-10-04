@@ -25,17 +25,25 @@ def load_allergen_mapping(allergen_csv_path):
 allergen_csv_path = 'finalAllergens.csv'
 allergen_mapping = load_allergen_mapping(allergen_csv_path)
 
-# Load the meals data from 'Meals.csv'
-def load_meals(meals_csv_path):
-    meals_df = pd.read_csv(meals_csv_path, encoding='ISO-8859-1')
-    # Ensure all values in the 'ingredients' column are treated as strings, even if they are missing or invalid
-    meals_df['ingredients'] = meals_df['ingredients'].apply(lambda x: str(x) if pd.notna(x) else '')
-    meals_df['ingredients'] = meals_df['ingredients'].apply(lambda x: [i.strip().lower() for i in x.split(',')])
+import pandas as pd
+
+# Your load_meals function
+def load_meals(csv_path):
+    meals_df = pd.read_csv(csv_path)
+    
+    # Ensure that all values in the 'ingredients' column are strings and handle NaN values
+    meals_df['ingredients'] = meals_df['ingredients'].fillna("").astype(str)
+    
+    # Apply splitting and cleaning of ingredients
+    meals_df['ingredients'] = meals_df['ingredients'].apply(lambda x: [i.strip().lower() for i in x.split(',') if i.strip()])
+    
     return meals_df
 
-
-meals_csv_path = 'finalMeals.csv'
+# The rest of your app code
+meals_csv_path = 'finalMeals.csv'  # Update this with your actual path if needed
 meals_df = load_meals(meals_csv_path)
+
+
 
 # Function to create features for ingredients
 def create_features_vectorized(ingredients_list):
