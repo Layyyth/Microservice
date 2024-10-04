@@ -1,91 +1,38 @@
 from flask import Flask, request, jsonify, render_template
 import pandas as pd
 import pickle
-import logging
-
-# Configure logging
-logging.basicConfig(level=logging.INFO)
-
-# Mock functions for testing (replace with actual implementations)
-def get_daily_calories(weight, height, age, gender, activity_level, goal):
-    # Simple BMR calculation (Mifflin-St Jeor Equation)
-    if gender.lower() == 'male':
-        bmr = 10 * weight + 6.25 * height - 5 * age + 5
-    else:
-        bmr = 10 * weight + 6.25 * height - 5 * age - 161
-    # Adjust for activity level (simplified)
-    activity_factors = {'sedentary': 1.2, 'light': 1.375, 'moderate': 1.55, 'active': 1.725}
-    bmr *= activity_factors.get(activity_level.lower(), 1.2)
-    # Adjust for goal
-    if goal.lower() == 'lose':
-        bmr -= 500
-    elif goal.lower() == 'gain':
-        bmr += 500
-    return int(bmr)
-
-def initialize_firestore():
-    # Mock Firestore initialization
-    return None
-
-def get_user_data_from_firestore(db, user_id):
-    # Mock user data retrieval
-    return {
-        'weight': 70,
-        'height': 170,
-        'age': 25,
-        'gender': 'male',
-        'activity': 'moderate',
-        'goal': 'maintain'
-    }
+# Import functions from caloriesLogic.py
+from caloriesLogic import get_daily_calories, validate_user_data
 
 app = Flask(__name__)
 
-# Load the trained models
+# Load the trained models (update with your actual model file path)
 model_filename = 'mealPredictingModel_2024-09-21_08-01-49.pkl'
-try:
-    with open(model_filename, 'rb') as model_file:
-        models = pickle.load(model_file)
-except Exception as e:
-    logging.error(f"Error loading model: {e}")
-    models = {}
+with open(model_filename, 'rb') as model_file:
+    models = pickle.load(model_file)
 
 # Define the unique allergens from the trained model
 unique_allergens = list(models.keys())
 
-# Load the allergen mapping
+# Load the allergen mapping from 'Allergens.csv'
 def load_allergen_mapping(allergen_csv_path):
-    try:
-        allergen_df = pd.read_csv(allergen_csv_path, encoding='ISO-8859-1')
-        allergen_df.columns = allergen_df.columns.str.strip().str.lower()
-        allergen_df['food'] = allergen_df['food'].str.strip().str.lower().fillna('none')
-        allergen_df['allergen'] = allergen_df['allergen'].str.strip().str.lower().fillna('none')
-        allergen_mapping = allergen_df.groupby('food')['allergen'].apply(list).to_dict()
-        return allergen_mapping
-    except Exception as e:
-        logging.error(f"Error loading allergen mapping: {e}")
-        return {}
+    allergen_df = pd.read_csv(allergen_csv_path, encoding='ISO-8859-1')  # Specify encoding to avoid UnicodeDecodeError
+    allergen_df.columns = allergen_df.columns.str.strip().str.lower()
+    allergen_df['food'] = allergen_df['food'].str.strip().str.lower().fillna('none')
+    allergen_df['allergen'] = allergen_df['allergen'].str.strip().str.lower().fillna('none')
+    allergen_mapping = allergen_df.groupby('food')['allergen'].apply(list).to_dict()
+    return allergen_mapping
 
 allergen_csv_path = 'finalAllergens.csv'
 allergen_mapping = load_allergen_mapping(allergen_csv_path)
 
-# Load meals
-def load_meals(csv_path):
-    try:
-        meals_df = pd.read_csv(csv_path)
-        
-        # Ensure that all values in the 'ingredients' column are strings and handle NaN values
-        meals_df['ingredients'] = meals_df['ingredients'].fillna("").astype(str)
-        
-        # Apply splitting and cleaning of ingredients
-        meals_df['ingredients'] = meals_df['ingredients'].apply(
-            lambda x: [i.strip().lower() for i in x.split(',') if i.strip()]
-        )
-        
-        return meals_df
-    except Exception as e:
-        logging.error(f"Error loading meals: {e}")
-        return pd.DataFrame()
-
+# Load the meals data from 'Meals.csv'
+def load_meals(meals_csv_path):
+    meals_df = pd.read_csv(meals_csv_path, encoding='ISO-8859-1')  # Load the meals CSV
+    # Ensure that all values in the 'ingredients' column are strings and handle missing values
+    meals_df['ingredients'] = meals_df['ingredients'].fillna('').astype(str)
+    meals_df['ingredients'] = meals_df['ingredients'].apply(lambda x: [i.strip().lower() for i in x.split(',')])
+    return meals_df
 
 meals_csv_path = 'finalMeals.csv'
 meals_df = load_meals(meals_csv_path)
@@ -93,63 +40,62 @@ meals_df = load_meals(meals_csv_path)
 # Function to create features for ingredients
 def create_features_vectorized(ingredients_list):
     features_df = pd.DataFrame(0, index=ingredients_list.index, columns=unique_allergens)
-    for ingredient, allergens in allergen_mapping.items():
-        ingredients_mask = ingredients_list.apply(lambda ingredients: ingredient in ingredients)
-        for allergen in allergens:
-            if allergen in features_df.columns:
-                features_df.loc[ingredients_mask, allergen] = 1
+    for allergen, allergens in allergen_mapping.items():
+        ingredients_mask = ingredients_list.apply(lambda ingredients: allergen in ingredients)
+        for allergy in allergens:
+            if allergy in features_df.columns:
+                features_df.loc[ingredients_mask, allergy] = 1
     return features_df
 
-# Function to predict meal safety
-def predict_meal_safety_vectorized(ingredients_list, user_allergies):
+# Function to predict meal safety based on allergies and dietary preferences
+def predict_meal_safety_with_diet(ingredients_list, user_allergies, diet_preference):
+    # Generate the features for all meals at once
     features_df = create_features_vectorized(ingredients_list)
+
+    # Initialize a DataFrame to store predictions for each allergen
     predictions_df = pd.DataFrame(0, index=features_df.index, columns=unique_allergens)
-    for allergen in unique_allergens:
-        if allergen in models:
-            try:
-                predictions = models[allergen].predict(features_df)
-                predictions_df[allergen] = predictions
-            except Exception as e:
-                logging.error(f"Error predicting for allergen '{allergen}': {e}")
+
+    # Make batch predictions for each allergen
+    for allergy in unique_allergens:
+        if allergy in models:
+            predictions_df[allergy] = models[allergy].predict(features_df)
+
+    # Filter out meals that are not safe
     unsafe_mask = predictions_df[user_allergies].max(axis=1) == 1
-    safe_meals = meals_df.loc[~unsafe_mask, 'recipeName']
-    return safe_meals.tolist()
+    safe_meals = meals_df.loc[~unsafe_mask]
+
+    # Apply dietary preference filter
+    if diet_preference in meals_df.columns:
+        safe_meals = safe_meals[safe_meals[diet_preference] == 1]
+
+    return safe_meals['recipename'].tolist()
 
 @app.route('/')
 def index():
+    # Render HTML page with input field for allergies and user details
     return render_template('index.html')
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    data = request.json
-    user_allergies = data.get('allergies', [])
-    user_id = data.get('user_id', '')
-    try:
-        db = initialize_firestore()
-        user_data = get_user_data_from_firestore(db, user_id)
-    except Exception as e:
-        logging.error(f'Error connecting to Firestore: {e}')
-        return jsonify({'error': f'Error connecting to Firestore: {e}'}), 500
-    if user_data:
-        weight = user_data.get('weight', 70)
-        height = user_data.get('height', 170)
-        age = user_data.get('age', 25)
-        gender = user_data.get('gender', 'male')
-        activity_level = user_data.get('activity', 'sedentary')
-        goal = user_data.get('goal', 'maintain')
-        try:
-            daily_calories = get_daily_calories(weight, height, age, gender, activity_level, goal)
-        except ValueError as ve:
-            logging.error(f'Error calculating calories: {ve}')
-            return jsonify({'error': f'Error calculating calories: {ve}'}), 400
-        safe_meals = predict_meal_safety_vectorized(meals_df['ingredients'], user_allergies)
-        return jsonify({
-            'daily_calories': daily_calories,
-            'safe_meals': safe_meals
-        })
-    else:
-        logging.error('User data not found')
-        return jsonify({'error': 'User data not found'}), 404
+    # Get user input from the request (allergies + personal details + diet preference)
+    user_allergies = request.json['allergies']
+    weight = request.json['weight']
+    height = request.json['height']
+    age = request.json['age']
+    gender = request.json['gender']
+    activity_level = request.json['activity_level']
+    goal = request.json['goal']
+    diet_preference = request.json['diet_preference']  # e.g., "vegan", "keto", etc.
+
+    # Perform meal safety prediction based on allergies and dietary preferences
+    safe_meals = predict_meal_safety_with_diet(meals_df['ingredients'], user_allergies, diet_preference)
+
+    # Calculate daily caloric needs
+    weight, height = validate_user_data(weight, height)  # Validate weight and height
+    daily_calories = get_daily_calories(weight, height, age, gender, activity_level, goal)
+
+    # Return the safe meals and calorie count as JSON response
+    return jsonify({'safe_meals': safe_meals, 'daily_calories': daily_calories})
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5001, debug=True)
