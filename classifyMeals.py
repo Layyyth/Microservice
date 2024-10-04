@@ -14,7 +14,7 @@ meals_df['ingredients'] = meals_df['ingredients'].apply(lambda x: [i.strip().low
 non_vegan_ingredients = [
     # Meat & Poultry (Raw/Cooked/Canned)
     'beef', 'raw beef', 'cooked beef', 'canned beef', 'pork', 'raw pork', 'cooked pork', 'bacon', 'ham', 'lamb', 
-    'veal', 'duck', 'venison', 'goat', 'rabbit', 'chicken', 'raw chicken', 'cooked chicken', 'canned chicken', 
+    'veal', 'duck', 'venison', 'goat', 'rabbit', 'chicken', 'raw chicken', 'chicken thighs' ,'cooked chicken', 'canned chicken', 
     'turkey', 'raw turkey', 'cooked turkey', 'quail', 'pheasant', 'sausages', 'salami', 'hot dog', 'bologna',
 
     # Fish & Seafood (Including raw/cooked/canned and broths)
