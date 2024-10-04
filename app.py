@@ -72,12 +72,20 @@ allergen_mapping = load_allergen_mapping(allergen_csv_path)
 def load_meals(csv_path):
     try:
         meals_df = pd.read_csv(csv_path)
+        
+        # Ensure that all values in the 'ingredients' column are strings and handle NaN values
         meals_df['ingredients'] = meals_df['ingredients'].fillna("").astype(str)
-        meals_df['ingredients'] = meals_df['ingredients'].apply(lambda x: [i.strip().lower() for i in x.split(',') if i.strip()])
+        
+        # Apply splitting and cleaning of ingredients
+        meals_df['ingredients'] = meals_df['ingredients'].apply(
+            lambda x: [i.strip().lower() for i in x.split(',') if i.strip()]
+        )
+        
         return meals_df
     except Exception as e:
         logging.error(f"Error loading meals: {e}")
         return pd.DataFrame()
+
 
 meals_csv_path = 'finalMeals.csv'
 meals_df = load_meals(meals_csv_path)
