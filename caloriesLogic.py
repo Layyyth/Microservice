@@ -9,7 +9,7 @@ MIN_WEIGHT = 30  # kg
 
 # Initialize Firebase Firestore using service account credentials
 def initialize_firestore():
-    cred = credentials.Certificate("/Users/layth/Documents/Developer/Diet-Recommendation-Prototype/FirebaseAccess/NutriwiseFirebase Admin.json")
+    cred = credentials.Certificate("FirebaseAccess/NutriwiseFirebaseAdmin.json")
     firebase_admin.initialize_app(cred)
     return firestore.client()
 
@@ -86,28 +86,4 @@ def get_daily_calories(weight, height, age, gender, activity_level, goal):
     tdee = calculate_tdee(bmr, activity_level)
     return calculate_calories(tdee, goal)
 
-# Example usage
-if __name__ == "__main__":
-    # Initialize Firestore
-    db = initialize_firestore()
 
-    # Example user ID (based on the image you uploaded)
-    user_id = 'sREBh3IVu9VTTL4FbMLfH4wYgza2'
-
-    # Fetch user data
-    user_data = get_user_data_from_firestore(db, user_id)
-
-    if user_data:
-        # Get relevant NutriInfo fields
-        weight = user_data.get('weight', 70)  # Default to 70 if not provided
-        height = user_data.get('height', 170)  # Default to 170 if not provided
-        age = user_data.get('age', 25)  # Default to 25 if not provided
-        gender = 'male'  # Placeholder, you can fetch this if available
-        activity_level = user_data.get('activity', 'sedentary')  # Default to 'sedentary'
-        goal = user_data.get('goal', 'maintain')  # Default to 'maintain'
-
-        # Calculate daily caloric needs
-        daily_calories = get_daily_calories(weight, height, age, gender, activity_level, goal)
-        print(f"Calories needed per day for user {user_id}: {daily_calories}")
-    else:
-        print("User not found or NutriInfo is missing.")
