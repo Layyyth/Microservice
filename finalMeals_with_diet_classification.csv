@@ -132,7 +132,7 @@ pita pizza,"['pita bread', 'tomato sauce', 'mozzarella', 'basil', 'olive oil']",
 bran muffins,"['wheat bran', 'flour', 'baking soda', 'eggs', 'butter', 'milk']",0,1,1,0,0,1
 beer cheese dip,"['beer', 'cheddar cheese', 'cream cheese', 'garlic', 'flour']",0,1,1,0,0,1
 soy sauce stir fry,"['soy sauce', 'chicken', 'broccoli', 'carrot', 'rice noodles']",0,0,0,1,0,0
-teriyaki chicken,"['chicken thighs', 'teriyaki sauce', 'soy sauce', 'ginger', 'garlic']",0,1,0,1,1,1
+teriyaki chicken,"['chicken', 'teriyaki sauce', 'soy sauce', 'ginger', 'garlic']",0,1,0,1,1,0
 wheat cracker,"['wheat flour', 'butter', 'salt', 'baking powder']",0,1,1,0,0,1
 seitan stir fry,"['seitan', 'soy sauce', 'ginger', 'garlic', 'onion', 'broccoli']",1,1,0,1,1,1
 lasagna rolls,"['lasagna noodles', 'ricotta cheese', 'spinach', 'tomato sauce', 'mozzarella']",1,1,1,1,1,1

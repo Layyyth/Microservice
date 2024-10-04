@@ -1,7 +1,7 @@
 import pandas as pd
 
 # Load the meals data from 'Meals.csv'
-meals_csv_path = '/Users/layth/Documents/Developer/Diet-Recommendation-Prototype/finalMeals.csv'  # Make sure to use the correct path in your project
+meals_csv_path = 'Diet-Recommendation-Prototype/finalMeals.csv'  # Make sure to use the correct path in your project
 meals_df = pd.read_csv(meals_csv_path, encoding='ISO-8859-1')
 
 # Ensure that all values in the 'ingredients' column are strings and handle missing values
@@ -14,7 +14,7 @@ meals_df['ingredients'] = meals_df['ingredients'].apply(lambda x: [i.strip().low
 non_vegan_ingredients = [
     # Meat & Poultry (Raw/Cooked/Canned)
     'beef', 'raw beef', 'cooked beef', 'canned beef', 'pork', 'raw pork', 'cooked pork', 'bacon', 'ham', 'lamb', 
-    'veal', 'duck', 'venison', 'goat', 'rabbit', 'chicken', 'raw chicken', 'chicken thighs' ,'cooked chicken', 'canned chicken', 
+    'veal', 'duck', 'venison', 'goat', 'rabbit', 'chicken', 'raw chicken','cooked chicken', 'canned chicken', 
     'turkey', 'raw turkey', 'cooked turkey', 'quail', 'pheasant', 'sausages', 'salami', 'hot dog', 'bologna',
 
     # Fish & Seafood (Including raw/cooked/canned and broths)
