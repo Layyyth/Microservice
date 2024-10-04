@@ -28,9 +28,10 @@ allergen_mapping = load_allergen_mapping(allergen_csv_path)
 # Load the meals data from 'Meals.csv'
 def load_meals(meals_csv_path):
     meals_df = pd.read_csv(meals_csv_path, encoding='ISO-8859-1')  # Specify encoding to avoid UnicodeDecodeError
-    # Add a check to handle non-string values
+    # Add a check to handle non-string values, replacing NaN values with empty lists
     meals_df['ingredients'] = meals_df['ingredients'].apply(lambda x: [i.strip().lower() for i in str(x).split(',')] if isinstance(x, str) else [])
     return meals_df
+
 
 
 
