@@ -1,7 +1,7 @@
 import pandas as pd
 
 # Load the meals data from 'Meals.csv'
-meals_csv_path = 'Diet-Recommendation-Prototype/finalMeals.csv'  # Make sure to use the correct path in your project
+meals_csv_path = './Diet-Recommendation-Prototype/finalMeals.csv'  # Make sure to use the correct path in your project
 meals_df = pd.read_csv(meals_csv_path, encoding='ISO-8859-1')
 
 # Ensure that all values in the 'ingredients' column are strings and handle missing values
