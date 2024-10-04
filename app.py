@@ -47,7 +47,7 @@ def create_features_vectorized(ingredients_list):
                 features_df.loc[ingredients_mask, allergy] = 1
     return features_df
 
-# Updated Function to predict meal safety based on allergens and diet preferences
+# Function to predict meal safety based on allergens and diet preferences
 def predict_meal_safety_vectorized(ingredients_list, user_allergies, diet_preference):
     # Generate the features for all meals at once
     features_df = create_features_vectorized(ingredients_list)
@@ -60,16 +60,27 @@ def predict_meal_safety_vectorized(ingredients_list, user_allergies, diet_prefer
         if allergy in models:
             predictions_df[allergy] = models[allergy].predict(features_df)
 
-    # Filter out meals that are not safe based on allergies (model predictions)
-    unsafe_mask = predictions_df[user_allergies].max(axis=1) == 1
-    safe_meals_from_model = meals_df.loc[~unsafe_mask]  # Meals predicted safe by model
+    # Ensure columns in predictions_df are lowercase
+    predictions_df.columns = predictions_df.columns.str.lower()
+
+    # Ensure user_allergies is also lowercase
+    user_allergies = [allergy.lower() for allergy in user_allergies]
+
+    # Ensure the user allergies are valid
+    valid_allergies = [allergy for allergy in user_allergies if allergy in predictions_df.columns]
+
+    if not valid_allergies:
+        return [], 'No valid allergies found in the dataset'
+
+    # Filter out meals that are not safe based on allergies
+    unsafe_mask = predictions_df[valid_allergies].max(axis=1) == 1
+    safe_meals = meals_df.loc[~unsafe_mask]
 
     # Filter based on diet preferences (only show meals that match the user's preference)
-    if diet_preference in safe_meals_from_model.columns:
-        safe_meals_from_model = safe_meals_from_model[safe_meals_from_model[diet_preference] == 1]
+    if diet_preference in safe_meals.columns:
+        safe_meals = safe_meals[safe_meals[diet_preference] == 1]
 
-    # Return the safe meals predicted by the model and then filtered by diet preferences
-    return safe_meals_from_model['recipeName'].tolist()
+    return safe_meals['recipeName'].tolist(), None
 
 @app.route('/')
 def index():
@@ -78,25 +89,33 @@ def index():
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    # Get user input from the request (allergies + personal details)
-    user_allergies = request.json['allergies']
-    weight = request.json['weight']
-    height = request.json['height']
-    age = request.json['age']
-    gender = request.json['gender']
-    activity_level = request.json['activity_level']
-    goal = request.json['goal']
-    diet_preference = request.json['diet_preference']  # Example: 'vegan', 'keto', etc.
+    try:
+        # Get user input from the request (allergies + personal details)
+        user_allergies = request.json['allergies']
+        weight = request.json['weight']
+        height = request.json['height']
+        age = request.json['age']
+        gender = request.json['gender']
+        activity_level = request.json['activity_level']
+        goal = request.json['goal']
+        diet_preference = request.json['diet_preference']  # Example: 'vegan', 'keto', etc.
 
-    # Perform meal safety prediction using vectorized operations
-    safe_meals = predict_meal_safety_vectorized(meals_df['ingredients'], user_allergies, diet_preference)
+        # Perform meal safety prediction using vectorized operations
+        safe_meals, error = predict_meal_safety_vectorized(meals_df['ingredients'], user_allergies, diet_preference)
 
-    # Calculate daily caloric needs
-    weight, height = validate_user_data(weight, height)  # Validate weight and height
-    daily_calories = get_daily_calories(weight, height, age, gender, activity_level, goal)
+        if error:
+            return jsonify({'error': error}), 400
 
-    # Return the safe meals and calorie count as JSON response
-    return jsonify({'safe_meals': safe_meals, 'daily_calories': daily_calories})
+        # Calculate daily caloric needs
+        weight, height = validate_user_data(weight, height)  # Validate weight and height
+        daily_calories = get_daily_calories(weight, height, age, gender, activity_level, goal)
+
+        # Return the safe meals and calorie count as JSON response
+        return jsonify({'safe_meals': safe_meals, 'daily_calories': daily_calories})
+
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
