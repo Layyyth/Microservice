@@ -47,7 +47,7 @@ def create_features_vectorized(ingredients_list):
                 features_df.loc[ingredients_mask, allergy] = 1
     return features_df
 
-# Function to predict meal safety based on allergens and diet preferences
+# Updated Function to predict meal safety based on allergens and diet preferences
 def predict_meal_safety_vectorized(ingredients_list, user_allergies, diet_preference):
     # Generate the features for all meals at once
     features_df = create_features_vectorized(ingredients_list)
@@ -60,15 +60,16 @@ def predict_meal_safety_vectorized(ingredients_list, user_allergies, diet_prefer
         if allergy in models:
             predictions_df[allergy] = models[allergy].predict(features_df)
 
-    # Filter out meals that are not safe based on allergies
+    # Filter out meals that are not safe based on allergies (model predictions)
     unsafe_mask = predictions_df[user_allergies].max(axis=1) == 1
-    safe_meals = meals_df.loc[~unsafe_mask]
+    safe_meals_from_model = meals_df.loc[~unsafe_mask]  # Meals predicted safe by model
 
     # Filter based on diet preferences (only show meals that match the user's preference)
-    if diet_preference in safe_meals.columns:
-        safe_meals = safe_meals[safe_meals[diet_preference] == 1]
+    if diet_preference in safe_meals_from_model.columns:
+        safe_meals_from_model = safe_meals_from_model[safe_meals_from_model[diet_preference] == 1]
 
-    return safe_meals['recipeName'].tolist()
+    # Return the safe meals predicted by the model and then filtered by diet preferences
+    return safe_meals_from_model['recipeName'].tolist()
 
 @app.route('/')
 def index():
@@ -100,4 +101,3 @@ def predict():
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port, debug=True)
-
