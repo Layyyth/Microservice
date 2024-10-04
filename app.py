@@ -62,10 +62,10 @@ def predict_meal_safety_vectorized(ingredients_list, user_allergies, diet_prefer
     # Ensure columns in predictions_df are lowercase for comparison
     predictions_df.columns = predictions_df.columns.str.lower()
 
-    # Ensure user_allergies is also lowercase for consistent comparison
+    # Process user allergies, strip out ' allergy' suffix and make lowercase for comparison
     user_allergies = [allergy.lower().replace(' allergy', '') for allergy in user_allergies]
 
-    # Ensure the user allergies are valid and exist in the predictions_df columns
+    # Ensure that the allergies provided by the user exist in the dataset
     valid_allergies = [allergy for allergy in user_allergies if allergy in predictions_df.columns]
 
     if not valid_allergies:
@@ -80,6 +80,7 @@ def predict_meal_safety_vectorized(ingredients_list, user_allergies, diet_prefer
         safe_meals = safe_meals[safe_meals[diet_preference] == 1]
 
     return safe_meals['recipeName'].tolist(), None
+
 
 
 @app.route('/')
