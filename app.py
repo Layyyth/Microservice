@@ -27,13 +27,9 @@ allergen_mapping = load_allergen_mapping(allergen_csv_path)
 
 # Load the meals data from 'Meals.csv'
 def load_meals(meals_csv_path):
-    meals_df = pd.read_csv(meals_csv_path, encoding='ISO-8859-1')  # Specify encoding to avoid UnicodeDecodeError
-    # Add a check to handle non-string values, replacing NaN values with empty lists
+    meals_df = pd.read_csv(meals_csv_path, encoding='ISO-8859-1')  
     meals_df['ingredients'] = meals_df['ingredients'].apply(lambda x: [i.strip().lower() for i in str(x).split(',')] if isinstance(x, str) else [])
     return meals_df
-
-
-
 
 meals_csv_path = 'finalMeals.csv'
 meals_df = load_meals(meals_csv_path)
@@ -79,20 +75,26 @@ def predict():
     user_id = data.get('user_id', '')
 
     # Fetch user data from Firestore
-    db = initialize_firestore()
-    user_data = get_user_data_from_firestore(db, user_id)
+    try:
+        db = initialize_firestore()
+        user_data = get_user_data_from_firestore(db, user_id)
+    except Exception as e:
+        return jsonify({'error': f'Error connecting to Firestore: {e}'}), 500
 
     if user_data:
         # Get user parameters from Firestore
-        weight = user_data.get('weight', 70)  # Default to 70 if not provided
-        height = user_data.get('height', 170)  # Default to 170 if not provided
-        age = user_data.get('age', 25)  # Default to 25 if not provided
-        gender = user_data.get('gender', 'male')  # Default to 'male'
-        activity_level = user_data.get('activity', 'sedentary')  # Default to 'sedentary'
-        goal = user_data.get('goal', 'maintain')  # Default to 'maintain'
+        weight = user_data.get('weight', 70)  
+        height = user_data.get('height', 170)  
+        age = user_data.get('age', 25)  
+        gender = user_data.get('gender', 'male')  
+        activity_level = user_data.get('activity', 'sedentary')  
+        goal = user_data.get('goal', 'maintain')  
 
         # Calculate daily caloric needs
-        daily_calories = get_daily_calories(weight, height, age, gender, activity_level, goal)
+        try:
+            daily_calories = get_daily_calories(weight, height, age, gender, activity_level, goal)
+        except ValueError as ve:
+            return jsonify({'error': f'Error calculating calories: {ve}'}), 400
 
         # Perform the meal safety prediction using vectorized operations
         safe_meals = predict_meal_safety_vectorized(meals_df['ingredients'], user_allergies)
