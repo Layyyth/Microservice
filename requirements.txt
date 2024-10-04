@@ -20,6 +20,7 @@ google-resumable-media==2.7.2
 googleapis-common-protos==1.65.0
 grpcio==1.66.2
 grpcio-status==1.66.2
+gunicorn==23.0.0
 httplib2==0.22.0
 idna==3.10
 imbalanced-learn==0.12.3
@@ -29,6 +30,7 @@ joblib==1.4.2
 MarkupSafe==2.1.5
 msgpack==1.1.0
 numpy==2.1.1
+packaging==24.1
 pandas==2.2.2
 proto-plus==1.24.0
 protobuf==5.28.2
