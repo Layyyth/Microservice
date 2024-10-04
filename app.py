@@ -1,18 +1,20 @@
 from flask import Flask, request, jsonify, render_template
 import pandas as pd
 import pickle
+# Import functions from caloriesLogic.py
+from caloriesLogic import get_daily_calories, validate_user_data
 
 app = Flask(__name__)
 
 # Load the trained models (update with your actual model file path)
-model_filename = 'trained-models/mealPredictingModel_2024-09-13_10-55-51.pkl'
+model_filename = '/Users/layth/Documents/Developer/Diet-Recommendation-Prototype/trained-models/mealPredictingModel_2024-09-21_08-01-49.pkl'
 with open(model_filename, 'rb') as model_file:
     models = pickle.load(model_file)
 
 # Define the unique allergens from the trained model
 unique_allergens = list(models.keys())
 
-# Load the allergen mapping from 'Allergens.csv'
+# Load the allergen mapping from 'finalAllergens.csv'
 def load_allergen_mapping(allergen_csv_path):
     allergen_df = pd.read_csv(allergen_csv_path, encoding='ISO-8859-1')  # Specify encoding to avoid UnicodeDecodeError
     allergen_df.columns = allergen_df.columns.str.strip().str.lower()
@@ -21,16 +23,18 @@ def load_allergen_mapping(allergen_csv_path):
     allergen_mapping = allergen_df.groupby('food')['allergen'].apply(list).to_dict()
     return allergen_mapping
 
-allergen_csv_path = 'Allergens.csv'
+allergen_csv_path = 'finalAllergens.csv'
 allergen_mapping = load_allergen_mapping(allergen_csv_path)
 
-# Load the meals data from 'Meals.csv'
+# Load the meals data from 'finalMeals_with_diet_classification.csv'
 def load_meals(meals_csv_path):
-    meals_df = pd.read_csv(meals_csv_path, encoding='ISO-8859-1')  # Specify encoding to avoid UnicodeDecodeError
+    meals_df = pd.read_csv(meals_csv_path, encoding='ISO-8859-1')  # Load the meals CSV
+    # Ensure that all values in the 'ingredients' column are strings and handle missing values
+    meals_df['ingredients'] = meals_df['ingredients'].fillna('').astype(str)
     meals_df['ingredients'] = meals_df['ingredients'].apply(lambda x: [i.strip().lower() for i in x.split(',')])
     return meals_df
 
-meals_csv_path = 'Meals.csv'
+meals_csv_path = 'finalMeals_with_diet_classification.csv'
 meals_df = load_meals(meals_csv_path)
 
 # Function to create features for ingredients
@@ -43,8 +47,8 @@ def create_features_vectorized(ingredients_list):
                 features_df.loc[ingredients_mask, allergy] = 1
     return features_df
 
-# Function to predict meal safety
-def predict_meal_safety_vectorized(ingredients_list, user_allergies):
+# Function to predict meal safety based on allergens and diet preferences
+def predict_meal_safety_vectorized(ingredients_list, user_allergies, diet_preference):
     # Generate the features for all meals at once
     features_df = create_features_vectorized(ingredients_list)
 
@@ -56,25 +60,42 @@ def predict_meal_safety_vectorized(ingredients_list, user_allergies):
         if allergy in models:
             predictions_df[allergy] = models[allergy].predict(features_df)
 
-    # Filter out meals that are not safe
+    # Filter out meals that are not safe based on allergies
     unsafe_mask = predictions_df[user_allergies].max(axis=1) == 1
-    safe_meals = meals_df.loc[~unsafe_mask, 'recipeName']
+    safe_meals = meals_df.loc[~unsafe_mask]
 
-    return safe_meals.tolist()
+    # Filter based on diet preferences (only show meals that match the user's preference)
+    if diet_preference in safe_meals.columns:
+        safe_meals = safe_meals[safe_meals[diet_preference] == 1]
+
+    return safe_meals['recipeName'].tolist()
 
 @app.route('/')
 def index():
-    # Render HTML page with input field for allergies
+    # Render HTML page with input field for allergies and user details
     return render_template('index.html')
 
 @app.route('/predict', methods=['POST'])
 def predict():
+    # Get user input from the request (allergies + personal details)
     user_allergies = request.json['allergies']
-    
-    # Perform the meal safety prediction using vectorized operations
-    safe_meals = predict_meal_safety_vectorized(meals_df['ingredients'], user_allergies)
-    
-    return jsonify({'safe_meals': safe_meals})
+    weight = request.json['weight']
+    height = request.json['height']
+    age = request.json['age']
+    gender = request.json['gender']
+    activity_level = request.json['activity_level']
+    goal = request.json['goal']
+    diet_preference = request.json['diet_preference']  # Example: 'vegan', 'keto', etc.
+
+    # Perform meal safety prediction using vectorized operations
+    safe_meals = predict_meal_safety_vectorized(meals_df['ingredients'], user_allergies, diet_preference)
+
+    # Calculate daily caloric needs
+    weight, height = validate_user_data(weight, height)  # Validate weight and height
+    daily_calories = get_daily_calories(weight, height, age, gender, activity_level, goal)
+
+    # Return the safe meals and calorie count as JSON response
+    return jsonify({'safe_meals': safe_meals, 'daily_calories': daily_calories})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5001, debug=True)

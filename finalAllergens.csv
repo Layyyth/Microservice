@@ -1,0 +1,886 @@
+food,allergen
+feta cheese,dairy allergy 
+sour cream,dairy allergy 
+milk,dairy allergy 
+cow milk,dairy allergy 
+goat milk,dairy allergy 
+buffalo milk ,dairy allergy 
+cream ,dairy allergy 
+butter,dairy allergy 
+buttermilk ,dairy allergy 
+cheese,dairy allergy 
+cheddar cheese,dairy allergy 
+mozzarella cheese,dairy allergy 
+blue cheese,dairy allergy 
+parmesan cheese,dairy allergy 
+swiss cheese,dairy allergy 
+cottage cheese,dairy allergy 
+cream cheese,dairy allergy 
+yogurt,dairy allergy 
+ice cream,dairy allergy 
+milk powder,dairy allergy 
+milk chocolate ,dairy allergy 
+casien ,dairy allergy 
+whey protien powder,dairy allergy 
+evaporated milk ,dairy allergy 
+condensed milk,dairy allergy 
+custard,dairy allergy 
+pudding,dairy allergy 
+ghee,dairy allergy 
+curds,dairy allergy 
+lactose,dairy allergy 
+lactalbumin,dairy allergy 
+egg,egg allergy
+egg white,egg allergy
+egg yolk,egg allergy
+dried egg,egg allergy
+powdered egg,egg allergy
+mayonnaise,egg allergy
+Hollandaise sauce,egg allergy
+aioli ,egg allergy
+Béarnaise sauce,egg allergy
+meringue,egg allergy
+custard,egg allergy
+pudding,egg allergy
+marshmallow,egg allergy
+ranch,egg allergy
+cesar dressing,egg allergy
+albumin,egg allergy
+egg white powder,egg allergy
+egg yolk powder,egg allergy
+lysozyme,egg allergy
+ovomucoid,egg allergy
+ovalbumin,egg allergy
+tatar sauce ,egg allergy
+remoulade,egg allergy
+salmon,fish allergy
+cod,fish allergy
+tuna,fish allergy
+haddock,fish allergy
+halibut,fish allergy
+mackerel,fish allergy
+sardines,fish allergy
+anchovies,fish allergy
+trout,fish allergy
+swordfish,fish allergy
+snapper,fish allergy
+seabass,fish allergy
+tilapia,fish allergy
+flounder,fish allergy
+grouper,fish allergy
+pollock,fish allergy
+catfish,fish allergy
+pike,fish allergy
+prech,fish allergy
+sole,fish allergy
+fish stock,fish allergy
+fish broth,fish allergy
+canned tuna,fish allergy
+canned salmon,fish allergy
+canned sardines,fish allergy
+canned anchovies,fish allergy
+canned mackerel,fish allergy
+worcestershire sauce,fish allergy
+fish sauce ,fish allergy
+caviar,fish allergy
+fish roe,fish allergy
+smoked salmon,fish allergy
+smoked mackerel,fish allergy
+smoke trout,fish allergy
+eel,fish allergy
+sushi,fish allergy
+surimi ,fish allergy
+fish oil ,fish allergy
+tapenade,fish allergy
+gelatin,fish allergy
+isinglass,fish allergy
+eicosapentaenoic acid,fish allergy
+docosahexaenoic acid,fish allergy
+shrimp,shellfish allergy
+crab,shellfish allergy
+lobster,shellfish allergy
+prawn,shellfish allergy
+crayfish,shellfish allergy
+crawfish,shellfish allergy
+langoustine,shellfish allergy
+clams,shellfish allergy
+mussels,shellfish allergy
+oysters,shellfish allergy
+scallops,shellfish allergy
+octopus,shellfish allergy
+snails,shellfish allergy
+abalone,shellfish allergy
+whelk,shellfish allergy
+sea snail,shellfish allergy
+cuttlefish,shellfish allergy
+sushi,shellfish allergy
+seafood curry,shellfish allergy
+peanut butter,peanut allergy
+peanuts,peanut allergy
+salted peanuts,peanut allergy
+roasted peanuts,peanut allergy
+raw peanuts,peanut allergy
+peanut flour,peanut allergy
+peanut sauce,peanut allergy
+granola bar,peanut allergy
+trail mix,peanut allergy
+peanut oil,peanut allergy
+almonds,tree nuts allergy
+walnuts,tree nuts allergy
+hazelnuts,tree nuts allergy
+cashews,tree nuts allergy
+pistachios,tree nuts allergy
+brazil nuts,tree nuts allergy
+macadamia nuts,tree nuts allergy
+pine nuts,tree nuts allergy
+chesnuts,tree nuts allergy
+pecans,tree nuts allergy
+nut butter,tree nuts allergy
+nut flour,tree nuts allergy
+nut oil,tree nuts allergy
+nut milk,tree nuts allergy
+almond milk,tree nuts allergy
+hazelnut milk,tree nuts allergy
+cashew milk,tree nuts allergy
+trail mix,tree nuts allergy
+granola bar,tree nuts allergy
+pesto,tree nuts allergy
+pralines,tree nuts allergy
+nougat,tree nuts allergy
+marzipan,tree nuts allergy
+white bread,Wheat/Gluten Allergy
+whole wheat bread,Wheat/Gluten Allergy
+multigrain bread,Wheat/Gluten Allergy
+pasta,Wheat/Gluten Allergy
+spaghetti,Wheat/Gluten Allergy
+macaroni,Wheat/Gluten Allergy
+lasagna,Wheat/Gluten Allergy
+crackers,Wheat/Gluten Allergy
+biscuit,Wheat/Gluten Allergy
+wheat tortillas,Wheat/Gluten Allergy
+pita bread,Wheat/Gluten Allergy
+bagels,Wheat/Gluten Allergy
+buns,Wheat/Gluten Allergy
+muffins,Wheat/Gluten Allergy
+cereal,Wheat/Gluten Allergy
+bran flakes cereal,Wheat/Gluten Allergy
+granola cereal,Wheat/Gluten Allergy
+shredded wheat cereal,Wheat/Gluten Allergy
+wheat flour,Wheat/Gluten Allergy
+beer,Wheat/Gluten Allergy
+barley flour,Wheat/Gluten Allergy
+barley soup,Wheat/Gluten Allergy
+barley malt,Wheat/Gluten Allergy
+rye bread,Wheat/Gluten Allergy
+rye crackers,Wheat/Gluten Allergy
+rye cereal,Wheat/Gluten Allergy
+oats,Wheat/Gluten Allergy
+oatmeal,Wheat/Gluten Allergy
+oat granola,Wheat/Gluten Allergy
+wheat starch,Wheat/Gluten Allergy
+semolina,Wheat/Gluten Allergy
+bulgur,Wheat/Gluten Allergy
+farina,Wheat/Gluten Allergy
+durum wheat,Wheat/Gluten Allergy
+pertzel,Wheat/Gluten Allergy
+croutons,Wheat/Gluten Allergy
+beer,Wheat/Gluten Allergy
+malted drinks,Wheat/Gluten Allergy
+soy sauce ,Wheat/Gluten Allergy
+teriyaki sauce,Wheat/Gluten Allergy
+malt vinegar,Wheat/Gluten Allergy
+seitan,Wheat/Gluten Allergy
+ravioli,Wheat/Gluten Allergy
+couscous,Wheat/Gluten Allergy
+bulgur seed,Wheat/Gluten Allergy
+soybean,soy allergy
+soybeans,soy allergy
+soy flour,soy allergy
+soy milk,soy allergy
+soy yogurt,soy allergy
+soy ice cream,soy allergy
+tofu,soy allergy
+tempeh,soy allergy
+miso,soy allergy
+natto,soy allergy
+soy protein,soy allergy
+soy sauce ,soy allergy
+tamari,soy allergy
+soy lecithin,soy allergy
+soy oil,soy allergy
+meatless burger,soy allergy
+meatless sausage,soy allergy
+meatless chicken,soy allergy
+hydrolyzed soy protein,soy allergy
+monosodium glutamate ,soy allergy
+msg,soy allergy
+pea protein,soy allergy
+beans ,soy allergy
+lentils,soy allergy
+peas,soy allergy
+chickpeas,soy allergy
+peanuts,soy allergy
+corn bread ,corn allergy
+corn,corn allergy
+corn flour,corn allergy
+cornmeal,corn allergy
+cornstarch,corn allergy
+corn syrup,corn allergy
+pop corn,corn allergy
+corn oil,corn allergy
+corn chips,corn allergy
+corn tortillas,corn allergy
+maltodextrin,corn allergy
+dextrose,corn allergy
+xanthan gum,corn allergy
+citric acid,corn allergy
+ascorbic acid,corn allergy
+ketchup,corn allergy
+sesame seeds,sesame allergy
+whole sesame seeds,sesame allergy
+toasted sesame seeds,sesame allergy
+sesame oil,sesame allergy
+toasted sesame oil,sesame allergy
+sesame flour,sesame allergy
+granola bar,sesame allergy
+hummus,sesame allergy
+tahini,sesame allergy
+halva,sesame allergy
+mustard,mustard allergy
+mustard seeds,mustard allergy
+whole mustard seeds,mustard allergy
+ground mustard seeds,mustard allergy
+yellow mustard,mustard allergy
+dijon mustard,mustard allergy
+spicy brown mustard,mustard allergy
+honey mustard,mustard allergy
+mustard powder,mustard allergy
+mustard oil,mustard allergy
+vinaigrettes,mustard allergy
+processed meats,mustard allergy
+relish,mustard allergy
+cabbage,mustard allergy
+broccoli,mustard allergy
+cauliflower,mustard allergy
+kale,mustard allergy
+lupin seeds,lupin allergy
+lupin flour,lupin allergy
+lupin beans,lupin allergy
+gluten-free bread,lupin allergy
+gluten-free cookies,lupin allergy
+gluten-free cake,lupin allergy
+gluten-free pasta,lupin allergy
+gluten-free cereals,lupin allergy
+plant-based protein bar,lupin allergy
+plant-based burger,lupin allergy
+plant-based sausage,lupin allergy
+plant-based steak,lupin allergy
+celery,celery allergy
+fresh celery,celery allergy
+celery root,celery allergy
+celeriac,celery allergy
+celery stalk,celery allergy
+celery seeds,celery allergy
+celery salt,celery allergy
+dried fruits,sulfite allergy
+dried raisins,sulfite allergy
+dried apricots,sulfite allergy
+dried prunes,sulfite allergy
+dried figs,sulfite allergy
+frozen potato,sulfite allergy
+canned potato,sulfite allergy
+dehydrated potato,sulfite allergy
+french fries,sulfite allergy
+hash browns,sulfite allergy
+wine,sulfite allergy
+beer,sulfite allergy
+jam,sulfite allergy
+jelly,sulfite allergy
+fruit juice,sulfite allergy
+pickles,sulfite allergy
+pickled carrots,sulfite allergy
+relish,sulfite allergy
+sauerkraut,sulfite allergy
+canned tomato,sulfite allergy
+tomato paste,sulfite allergy
+ketchup,sulfite allergy
+mustard,sulfite allergy
+barbecue sauce,sulfite allergy
+chutney,sulfite allergy
+sausage,sulfite allergy
+hot dogs,sulfite allergy
+beans ,legume allergy
+kidney beans,legume allergy
+black beans,legume allergy
+pinto beans,legume allergy
+navy beans,legume allergy
+great northern beans,legume allergy
+fava beans,legume allergy
+lima beans,legume allergy
+cannellini beans,legume allergy
+mung beans,legume allergy
+adzuki beans,legume allergy
+soybeans,legume allergy
+tofu,legume allergy
+soy milk,legume allergy
+soy sauce ,legume allergy
+peas,legume allergy
+green peas,legume allergy
+split peas,legume allergy
+snow peas,legume allergy
+sugar snap peas,legume allergy
+lentils,legume allergy
+red lentils,legume allergy
+green lentils,legume allergy
+brown lentils,legume allergy
+yellow lentils,legume allergy
+chickpeas,legume allergy
+hummus,legume allergy
+falafel,legume allergy
+peanuts,legume allergy
+peanut butter,legume allergy
+peanut oil,legume allergy
+lupin,legume allergy
+gluten-free flour,legume allergy
+pasta,legume allergy
+soy milk,legume allergy
+tempeh,legume allergy
+soy lecithin,legume allergy
+canned beans,legume allergy
+canned peas,legume allergy
+bean flour,legume allergy
+lupin flour,legume allergy
+soy sauce ,legume allergy
+miso,legume allergy
+tempeh,legume allergy
+plant-based burger,legume allergy
+plant-based sausage,legume allergy
+processed meats,legume allergy
+plant-based steak,legume allergy
+kidney beans,legume allergy
+black beans,legume allergy
+canned black beans,legume allergy
+canned kidney beans,legume allergy
+canned chickpeas,legume allergy
+sesame seeds,seed allergy
+sesame oil,seed allergy
+sesame paste,seed allergy
+tahini,seed allergy
+hummus,seed allergy
+halva,seed allergy
+granola bar,seed allergy
+granola,seed allergy
+falafel,seed allergy
+pumpkin seeds,seed allergy
+pumpkin seed oil,seed allergy
+flaxseed,seed allergy
+flaxseed oil,seed allergy
+poppy seeds,seed allergy
+mustard seeds,seed allergy
+yellow mustard,seed allergy
+dijon mustard,seed allergy
+pickles,seed allergy
+hemp seeds,seed allergy
+hemp milk,seed allergy
+pine seeds,seed allergy
+pine nuts,seed allergy
+pesto sauce,seed allergy
+gluten-free bread,seed allergy
+gluten-free flour,seed allergy
+gluten-free pasta,seed allergy
+mushroom,mushroom allergy
+white button mushroom,mushroom allergy
+cermini mushroom,mushroom allergy
+portobello mushroom,mushroom allergy
+shiitake mushroom,mushroom allergy
+oyster mushroom,mushroom allergy
+enoki ,mushroom allergy
+enoki mushroom,mushroom allergy
+maitake mushroom,mushroom allergy
+chanterelle mushroom,mushroom allergy
+morel mushroom,mushroom allergy
+porcini mushroom,mushroom allergy
+canned mushroom,mushroom allergy
+dried mushroom,mushroom allergy
+mushroom broth,mushroom allergy
+mushroom gravy,mushroom allergy
+mushroom powder,mushroom allergy
+cream of mushroom,mushroom allergy
+truffle ,mushroom allergy
+banana,fruit allergy
+banana bread,fruit allergy
+banana chips,fruit allergy
+strawberry,fruit allergy
+frozen strawberry,fruit allergy
+strawberry jam,fruit allergy
+strawberry jelly,fruit allergy
+strawberry yogut,fruit allergy
+orange,fruit allergy
+orange juice,fruit allergy
+orange zest,fruit allergy
+marmalade,fruit allergy
+lemon,fruit allergy
+lime,fruit allergy
+grapefruit,fruit allergy
+clementine,fruit allergy
+tangerine,fruit allergy
+mandarine,fruit allergy
+peach,fruit allergy
+plums,fruit allergy
+cherries,fruit allergy
+apricot,fruit allergy
+grape,fruit allergy
+raisins,fruit allergy
+wine,fruit allergy
+grape juice,fruit allergy
+grape jelly,fruit allergy
+grape jam,fruit allergy
+nectarine,fruit allergy
+banana,banana allergy
+banana bread,banana allergy
+banana chips,banana allergy
+frozen strawberry,strawberry allergy
+strawberry jam,strawberry allergy
+strawberry jelly,strawberry allergy
+strawberry yogut,strawberry allergy
+orange,citrus  allergy
+orange juice,citrus  allergy
+orange zest,citrus  allergy
+marmalade,citrus  allergy
+lemons,citrus  allergy
+limes,citrus  allergy
+grapefruit,citrus  allergy
+clementine,citrus  allergy
+tangerine,citrus  allergy
+mandarine,citrus  allergy
+peaches,stone fruit allergy
+plums,stone fruit allergy
+cherries,stone fruit allergy
+apricots,stone fruit allergy
+nectarines,stone fruit allergy
+grape,grape allergy
+raisins,grape allergy
+wine,grape allergy
+grape juice,grape allergy
+grape jelly,grape allergy
+grape jam,grape allergy
+tomato,nightshade allergy
+tomato soup,nightshade allergy
+tomato paste,nightshade allergy
+potatoe,nightshade allergy
+eggplants ,nightshade allergy
+pepper,nightshade allergy
+bell pepper,nightshade allergy
+hot pepper,nightshade allergy
+paprika,nightshade allergy
+cayanne pepper,nightshade allergy
+broccoli,cruciferous allergy
+cauliflower,cruciferous allergy
+cabbage,cruciferous allergy
+brussels sprouts,cruciferous allergy
+kale,cruciferous allergy
+garlic,allium family
+onions,allium family
+leeks,allium family
+chives,allium family
+shallots,allium family
+cucumbers,cucurbit allergy
+zucchini,cucurbit allergy
+pumpkins,cucurbit allergy
+melons,cucurbit allergy
+squash,cucurbit allergy
+bananas,latex-fruit syndrome
+avocados,latex-fruit syndrome
+kiwi,latex-fruit syndrome
+chestnuts,latex-fruit syndrome
+passion fruit,latex-fruit syndrome
+papayas ,latex-fruit syndrome
+figs,latex-fruit syndrome
+tomatoes,latex-fruit syndrome
+potatoes,latex-fruit syndrome
+peppers,latex-fruit syndrome
+mangoes,latex-fruit syndrome
+pineapples,latex-fruit syndrome
+watermelon,latex-fruit syndrome
+cantaloupe,latex-fruit syndrome
+honeydew,latex-fruit syndrome
+carrots,latex-fruit syndrome
+apples,latex-fruit syndrome
+celery,latex-fruit syndrome
+strawberries,latex-fruit syndrome
+cherries,latex-fruit syndrome
+peaches,latex-fruit syndrome
+grapes,latex-fruit syndrome
+oranges,latex-fruit syndrome
+apples,bee pollen
+pears,bee pollen
+peaches,bee pollen
+plums,bee pollen
+melons,bee pollen
+bananas,bee pollen
+cucumbers,bee pollen
+papayas,bromelain allergy
+figs,bromelain allergy
+pineapple,bromelain allergy
+wine,tannin sensitivity
+tea,tannin sensitivity
+coffee,tannin sensitivity
+grapes,tannin sensitivity
+persimmons,tannin sensitivity
+pomegranates,tannin sensitivity
+cranberries,tannin sensitivity
+blueberries,tannin sensitivity
+persimmons,tannin sensitivity
+pomegranates,tannin sensitivity
+apples,tannin sensitivity
+walnuts,tannin sensitivity
+hazelnuts,tannin sensitivity
+almonds,tannin sensitivity
+red beans,tannin sensitivity
+lentils,tannin sensitivity
+cinnamon,tannin sensitivity
+cloves,tannin sensitivity
+chocolate,tannin sensitivity
+espresso,caffeine allergy
+matcha powder,caffeine allergy
+coffee,caffeine allergy
+black Tea,caffeine allergy
+green Tea,caffeine allergy
+white Tea,caffeine allergy
+energy drinks,caffeine allergy
+sodas,caffeine allergy
+cola,caffeine allergy
+cocoa,caffeine allergy
+dark chocolate,caffeine allergy
+beer,alcohol intolerence
+white wine,alcohol intolerence
+red wine,alcohol intolerence
+spirits,alcohol intolerence
+soy sauce,glutamate sensitivity
+teriyaki sauce,glutamate sensitivity
+cheese,glutamate sensitivity
+tomatoes,glutamate sensitivity
+mushrooms,glutamate sensitivity
+cheddar,tyramine sensitivity
+parmesan,tyramine sensitivity
+roquefort,tyramine sensitivity
+salami,tyramine sensitivity
+pepperoni,tyramine sensitivity
+sausages,tyramine sensitivity
+soy sauce,tyramine sensitivity
+miso paste,tyramine sensitivity
+sauerkraut,tyramine sensitivity
+pickles,tyramine sensitivity
+olives,tyramine sensitivity
+red wine,tyramine sensitivity
+beer,tyramine sensitivity
+cherry,tyramine sensitivity
+eggplant,fodmap sensitivity
+green beans,fodmap sensitivity
+bok choy,fodmap sensitivity
+bell pepper,fodmap sensitivity
+carrot,fodmap sensitivity
+cucumber,fodmap sensitivity
+lettuce,fodmap sensitivity
+potato,fodmap sensitivity
+tomato,fodmap sensitivity
+zucchini,fodmap sensitivity
+cantaloupe,fodmap sensitivity
+grapes,fodmap sensitivity
+kiwi,fodmap sensitivity
+orange,fodmap sensitivity
+pineapple,fodmap sensitivity
+strawberries,fodmap sensitivity
+almond milk,fodmap sensitivity
+brie and camembert cheese,fodmap sensitivity
+feta cheese,fodmap sensitivity
+hard cheeses,fodmap sensitivity
+lactose-free milk,fodmap sensitivity
+soy milk,fodmap sensitivity
+macadamia nuts,fodmap sensitivity
+peanuts,fodmap sensitivity
+pumpkin seeds,fodmap sensitivity
+walnuts,fodmap sensitivity
+Apples,fodmap sensitivity
+pears,fodmap sensitivity
+mangoes,fodmap sensitivity
+cherry,fodmap sensitivity
+fig,fodmap sensitivity
+nashi pears,fodmap sensitivity
+pears,fodmap sensitivity
+watermelon,fodmap sensitivity
+Artichoke,fodmap sensitivity
+garlic,fodmap sensitivity
+leek,fodmap sensitivity
+onions,fodmap sensitivity
+spring onions,fodmap sensitivity
+mushrooms,fodmap sensitivity
+cauliflower,fodmap sensitivity
+peas,fodmap sensitivity
+ whole wheat bread,fodmap sensitivity
+rye bread,fodmap sensitivity
+muesli,fodmap sensitivity
+wheat pasta,fodmap sensitivity
+red kidney beans,fodmap sensitivity
+split peas,fodmap sensitivity
+falafel,fodmap sensitivity
+baked beans,fodmap sensitivity
+Soft cheeses,fodmap sensitivity
+milk,fodmap sensitivity
+yogurt,fodmap sensitivity
+honey,fodmap sensitivity
+stock beef,alpha-gal syndrome 
+stock lamb ,alpha-gal syndrome 
+broth lamb,alpha-gal syndrome 
+broth beef ,alpha-gal syndrome 
+beef, alpha-gal syndrome 
+pork, alpha-gal syndrome 
+ lamb, alpha-gal syndrome 
+venison, alpha-gal syndrome 
+mutton, alpha-gal syndrome 
+goat meat, alpha-gal syndrome 
+bison, alpha-gal syndrome 
+buffalo, alpha-gal syndrome 
+ rabbit meat, alpha-gal syndrome 
+ squirrel, alpha-gal syndrome 
+ bacon, alpha-gal syndrome 
+sausages , alpha-gal syndrome 
+hot dogs, alpha-gal syndrome 
+salami, alpha-gal syndrome 
+ham, alpha-gal syndrome 
+liver , alpha-gal syndrome 
+kidney , alpha-gal syndrome 
+heart, alpha-gal syndrome 
+ pancreas, alpha-gal syndrome 
+ thymus, alpha-gal syndrome 
+gelatin, alpha-gal syndrome 
+lard , alpha-gal syndrome 
+Sauerkraut,histamine intolerance
+kimchi ,histamine intolerance
+miso,histamine intolerance
+tempe,histamine intolerance
+kombucha,histamine intolerance
+pickles ,histamine intolerance
+ vinegar,histamine intolerance
+ ketchup,histamine intolerance
+ salami ,histamine intolerance
+ pepperoni ,histamine intolerance
+prosciutto,histamine intolerance
+ham,histamine intolerance
+bacon,histamine intolerance
+sausages,histamine intolerance
+hot dogs,histamine intolerance
+beef jerky,histamine intolerance
+egg Parmesan ,histamine intolerance
+gouda,histamine intolerance
+cheddar,histamine intolerance
+brie,histamine intolerance
+blue cheese ,histamine intolerance
+red wine ,histamine intolerance
+beer,histamine intolerance
+ tuna,histamine intolerance
+mackerel,histamine intolerance
+sardines,histamine intolerance
+anchovies,histamine intolerance
+herring,histamine intolerance
+smoked salmon,histamine intolerance
+soy sauce,histamine intolerance
+fish sauce ,histamine intolerance
+shrimp paste ,histamine intolerance
+yogurt,histamine intolerance
+sour cream ,histamine intolerance
+tomatoes,histamine intolerance
+eggplant,histamine intolerance
+spinach ,histamine intolerance
+avocados,histamine intolerance
+pumpkin,histamine intolerance
+oranges,histamine intolerance
+lemons,histamine intolerance
+limes,histamine intolerance
+grapefruit,histamine intolerance
+strawberries,histamine intolerance
+pineapple,histamine intolerance
+bananas,histamine intolerance
+kiwi,histamine intolerance
+papaya,histamine intolerance
+walnuts,histamine intolerance
+cashews,histamine intolerance
+peanuts,histamine intolerance
+strawberries,salicylate sensitivity
+raspberries,salicylate sensitivity
+blackberries,salicylate sensitivity
+ blueberries,salicylate sensitivity
+apples,salicylate sensitivity
+grapes,salicylate sensitivity
+ raisins,salicylate sensitivity
+oranges,salicylate sensitivity
+ tangerines,salicylate sensitivity
+cherries,salicylate sensitivity
+peaches,salicylate sensitivity
+plums,salicylate sensitivity
+pineapples,salicylate sensitivity
+watermelon,salicylate sensitivity
+apricots,salicylate sensitivity
+kiwifruit,salicylate sensitivity
+avocado,salicylate sensitivity
+pears,salicylate sensitivity
+papaya,salicylate sensitivity
+bananas ,salicylate sensitivity
+mango,salicylate sensitivity
+tomatoes,salicylate sensitivity
+peppers,salicylate sensitivity
+broccoli,salicylate sensitivity
+zucchini,salicylate sensitivity
+spinach,salicylate sensitivity
+cauliflower,salicylate sensitivity
+eggplant,salicylate sensitivity
+mushrooms,salicylate sensitivity
+olives,salicylate sensitivity
+radishes,salicylate sensitivity
+cucumbers,salicylate sensitivity
+mint,salicylate sensitivity
+curry powder,salicylate sensitivity
+thyme,salicylate sensitivity
+oregano,salicylate sensitivity
+rosemary,salicylate sensitivity
+dill,salicylate sensitivity
+basil ,salicylate sensitivity
+turmeric,salicylate sensitivity
+paprika,salicylate sensitivity
+cloves,salicylate sensitivity
+sweet potatoes,salicylate sensitivity
+asparagus,salicylate sensitivity
+carrots,salicylate sensitivity
+Iceberg,salicylate sensitivity
+lettuce,salicylate sensitivity
+garlic,salicylate sensitivity
+parsley,salicylate sensitivity
+coriander,salicylate sensitivity
+white,salicylate sensitivity
+cabbage,salicylate sensitivity
+salt,salicylate sensitivity
+chives,salicylate sensitivity
+almonds,salicylate sensitivity
+peanuts,salicylate sensitivity
+pistachios,salicylate sensitivity
+pine nuts,salicylate sensitivity
+sunflower seeds,salicylate sensitivity
+walnuts,salicylate sensitivity
+ sesame seeds ,salicylate sensitivity
+flax seeds,salicylate sensitivity
+tea,salicylate sensitivity
+coffee,salicylate sensitivity
+red wine,salicylate sensitivity
+ciders,salicylate sensitivity
+cola,salicylate sensitivity
+beer,salicylate sensitivity
+honey,salicylate sensitivity
+molasses,salicylate sensitivity
+corn,salicylate sensitivity
+syrup,salicylate sensitivity
+maple syrup,salicylate sensitivity
+white sugar,salicylate sensitivity
+brown sugar ,salicylate sensitivity
+  vinegar,salicylate sensitivity
+ coconut oil ,salicylate sensitivity
+ coconut milk,salicylate sensitivity
+licorice,salicylate sensitivity
+olive oil,salicylate sensitivity
+butter,salicylate sensitivity
+chocolate,Cocoa Allergy
+cocoa butter,Cocoa Allergy
+cocoa powder,Cocoa Allergy
+cacao nibs,Cocoa Allergy
+milk chocolate,Cocoa Allergy
+ dark chocolate,Cocoa Allergy
+white chocolate,Cocoa Allergy
+Chocolate chips,Cocoa Allergy
+Mentha piperita,Mint Allergy
+Mint,Mint Allergy
+stock Duck ,Poultry Allergy
+stock Chicken,Poultry Allergy
+broth Duck,Poultry Allergy
+broth Chicken,Poultry Allergy
+Chicken wings,Poultry Allergy
+Chicken,Poultry Allergy
+Turkey,Poultry Allergy
+Duck,Poultry Allergy
+Goose,Poultry Allergy
+deli meats,Poultry Allergy
+sausages,Poultry Allergy
+nuggets,Poultry Allergy
+Strawberries,Berry allergy
+Blueberries,Berry allergy
+Raspberries,Berry allergy
+Blackberries,Berry allergy
+Cranberries,Berry allergy
+ Berry sauces,Berry allergy
+aspartam,Aspartame Allergy
+artifical sweetner,Aspartame Allergy
+diet sodas,Aspartame Allergy
+black pepper,spice allergy
+ cinnamon ,spice allergy
+garlic,spice allergy
+ginger,spice allergy
+turmeric ,spice allergy
+mustard ,spice allergy
+cloves,spice allergy
+paprika,spice allergy
+cardamom,spice allergy
+ chili peppers,spice allergy
+ fennel ,spice allergy
+coriander,spice allergy
+anise,spice allergy
+cumin,spice allergy
+dill,spice allergy
+bay leaf,spice allergy
+ saffron,spice allergy
+tarragon,spice allergy
+rosemary ,spice allergy
+celery seed ,spice allergy
+clove,spice allergy
+szechuan pepper ,spice allergy
+fenugreek,spice allergy
+paprika,spice allergy
+ sumac ,spice allergy
+caraway,spice allergy
+mace,spice allergy
+star anise,spice allergy
+chervil,spice allergy
+curry powder ,spice allergy
+wasabi,spice allergy
+horseradish,spice allergy
+lovage,spice allergy
+juniper berries ,spice allergy
+thyme,spice allergy
+marjoram,spice allergy
+oregano,spice allergy
+basil,spice allergy
+ sage,spice allergy
+dandelion,spice allergy
+coffee,caffeine allergy
+ black tea,caffeine allergy
+ green tea,caffeine allergy
+white tea,caffeine allergy
+energy drinks,caffeine allergy
+ sodas cola ,caffeine allergy
+cocoa,caffeine allergy
+dark chocolate,caffeine allergy
+red 40,Artificial Food Coloring Allergy
+ red 3,Artificial Food Coloring Allergy
+yellow 5,Artificial Food Coloring Allergy
+yellow 6,Artificial Food Coloring Allergy
+blue 1,Artificial Food Coloring Allergy
+blue 2,Artificial Food Coloring Allergy
+green 3 ,Artificial Food Coloring Allergy
+orange B ,Artificial Food Coloring Allergy
+beta-carotene,Artificial Food Coloring Allergy
+violet 1,Artificial Food Coloring Allergy
+ yeast,yeast allergy 
+nutritional yeast  ,yeast allergy 
+gummy candies,gelatin allergy
+marshmallows,gelatin allergy
+gelatin desserts ,gelatin allergy
+yogurts,gelatin allergy
+jelly,gelatin allergy
+gummy bear,gelatin allergy
