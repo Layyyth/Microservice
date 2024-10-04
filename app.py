@@ -23,7 +23,7 @@ def load_allergen_mapping(allergen_csv_path):
     allergen_mapping = allergen_df.groupby('food')['allergen'].apply(list).to_dict()
     return allergen_mapping
 
-allergen_csv_path = 'finalAllergens.csv'
+allergen_csv_path = 'prev-datasets/fa.csv'
 allergen_mapping = load_allergen_mapping(allergen_csv_path)
 
 # Load the meals data from 'Meals.csv'
@@ -34,7 +34,7 @@ def load_meals(meals_csv_path):
     meals_df['ingredients'] = meals_df['ingredients'].apply(lambda x: [i.strip().lower() for i in x.split(',')])
     return meals_df
 
-meals_csv_path = 'finalMeals.csv'
+meals_csv_path = 'prev-datasets/fm.csv'
 meals_df = load_meals(meals_csv_path)
 
 # Function to create features for ingredients
