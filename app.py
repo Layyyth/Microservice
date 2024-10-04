@@ -47,7 +47,6 @@ def create_features_vectorized(ingredients_list):
                 features_df.loc[ingredients_mask, allergy] = 1
     return features_df
 
-# Function to predict meal safety based on allergens and diet preferences
 def predict_meal_safety_vectorized(ingredients_list, user_allergies, diet_preference):
     # Generate the features for all meals at once
     features_df = create_features_vectorized(ingredients_list)
@@ -60,13 +59,13 @@ def predict_meal_safety_vectorized(ingredients_list, user_allergies, diet_prefer
         if allergy in models:
             predictions_df[allergy] = models[allergy].predict(features_df)
 
-    # Ensure columns in predictions_df are lowercase
+    # Ensure columns in predictions_df are lowercase for comparison
     predictions_df.columns = predictions_df.columns.str.lower()
 
-    # Ensure user_allergies is also lowercase
-    user_allergies = [allergy.lower() for allergy in user_allergies]
+    # Ensure user_allergies is also lowercase for consistent comparison
+    user_allergies = [allergy.lower().replace(' allergy', '') for allergy in user_allergies]
 
-    # Ensure the user allergies are valid
+    # Ensure the user allergies are valid and exist in the predictions_df columns
     valid_allergies = [allergy for allergy in user_allergies if allergy in predictions_df.columns]
 
     if not valid_allergies:
@@ -81,6 +80,7 @@ def predict_meal_safety_vectorized(ingredients_list, user_allergies, diet_prefer
         safe_meals = safe_meals[safe_meals[diet_preference] == 1]
 
     return safe_meals['recipeName'].tolist(), None
+
 
 @app.route('/')
 def index():
