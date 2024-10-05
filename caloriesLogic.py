@@ -1,5 +1,10 @@
+import os
 import firebase_admin
 from firebase_admin import credentials, firestore
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Constants for min/max values
 MAX_HEIGHT = 300  # cm
@@ -9,7 +14,13 @@ MIN_WEIGHT = 30  # kg
 
 # Initialize Firebase Firestore using service account credentials
 def initialize_firestore():
-    cred = credentials.Certificate("FirebaseAccess/NutriwiseFirebaseAdmin.json")
+    # Get the path to the credentials file from an environment variable
+    firebase_cred_path = os.getenv('FIREBASE_CRED_PATH')
+    
+    if not firebase_cred_path:
+        raise Exception("Firebase credentials path is not set in the environment variables")
+
+    cred = credentials.Certificate(firebase_cred_path)
     firebase_admin.initialize_app(cred)
     return firestore.client()
 
