@@ -1,5 +1,6 @@
 .DS_Store
 .DS_Store
 myenv/
+FirebaseAccess
 FirebaseAccess/NutriwiseFirebaseAdmin.json
 .env
