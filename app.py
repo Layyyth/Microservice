@@ -1,6 +1,8 @@
 from flask import Flask, request, jsonify
 import pandas as pd
 import pickle
+from caloriesLogic import get_daily_calories
+from firebaseHandler import initialize_firestore, get_user_data_from_firestore
 
 # Import functions from caloriesLogic.py
 from caloriesLogic import get_daily_calories, validate_user_data
@@ -150,25 +152,38 @@ def predict_meal_safety_with_diet(ingredients_list, user_allergies, diet_prefere
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    # Get user input from the request
     data = request.json
-    user_allergies = data.get('allergies', [])
-    weight = data.get('weight')
-    height = data.get('height')
-    age = data.get('age')
-    gender = data.get('gender')
-    activity_level = data.get('activity_level')
-    goal = data.get('goal')
-    diet_preference = data.get('diet_preference', 'none')  # e.g., 'vegan', 'vegetarian'
+    user_id = data.get('user_id')
+    
+    # Initialize Firestore and fetch user data
+    db = initialize_firestore()
+    user_data = get_user_data_from_firestore(db, user_id)
+    
+    # Debugging: print fetched user data to ensure it exists
+    print(f"Fetched user data: {user_data}")
+    
+    # Check if user_data is None (i.e., if the user was not found in Firestore)
+    if not user_data:
+        return jsonify({"error": "User data not found"}), 404
+    
+    # Extract relevant NutriInfo fields
+    user_allergies = user_data.get('allergies', [])
+    diet_preference = user_data.get('diet', 'none')
+    weight = user_data.get('weight')
+    height = user_data.get('height')
+    age = user_data.get('age')
+    gender = user_data.get('gender')
+    activity_level = user_data.get('activity')
+    goal = user_data.get('goal')
 
     # Perform meal safety prediction
     safe_meals = predict_meal_safety_with_diet(meals_df['ingredients'], user_allergies, diet_preference)
 
     # Calculate daily caloric needs
-    weight, height = validate_user_data(weight, height)
     daily_calories = get_daily_calories(weight, height, age, gender, activity_level, goal)
 
     return jsonify({'safe_meals': safe_meals, 'daily_calories': daily_calories})
+
 
 if __name__ == '__main__':
     app.run(host='localhost', port=5001, debug=True)
