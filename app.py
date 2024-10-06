@@ -1,3 +1,4 @@
+import os
 from flask import Flask, request, jsonify
 import pandas as pd
 import pickle
@@ -29,99 +30,26 @@ def load_allergen_mapping(allergen_csv_path):
 allergen_csv_path = 'finalAllergens.csv'
 allergen_mapping = load_allergen_mapping(allergen_csv_path)
 
+# Add root route to the app
+@app.route('/')
+def index():
+    return "Welcome to the Diet Recommendation Microservice! Use the '/predict' endpoint to get meal recommendations."
+
+# Rest of your code remains the same...
 
 def classify_meals(meals_df):
-    # Updated dictionary of keywords for each diet preference
     dietary_keywords = {
-    'vegan': [
-        'meat', 'chicken', 'beef', 'pork', 'fish', 'lamb', 'eggs', 'milk', 'cheese', 'butter', 'honey',
-        'bacon', 'sausage', 'gelatin', 'shrimp', 'tuna', 'salmon', 'sardines', 'anchovies', 'caviar',
-        'yogurt', 'cream', 'mayo', 'whey', 'casein', 'lard', 'tallow', 'duck', 'goose', 'shellfish',
-        'mozzarella cheese', 'parmesan cheese', 'cheddar cheese', 'brie cheese', 'blue cheese', 
-        'gouda cheese', 'camembert cheese', 'feta cheese', 'goat cheese', 'cream cheese', 'ricotta cheese',
-        'chicken breast', 'chicken thigh', 'chicken wings', 'chicken legs', 'turkey', 'beef steak', 
-        'minced beef', 'ground beef', 'pork loin', 'pork belly', 'ham', 'prosciutto', 'lamb chops',
-        'duck breast', 'goose liver', 'pâté', 'salmon', 'tuna', 'sardines', 'mackerel', 'trout',
-        'cod', 'haddock', 'anchovies', 'halibut', 'sea bass', 'snapper', 'tilapia', 'flounder',
-        'swordfish', 'catfish', 'lobster', 'crab', 'mussels', 'scallops', 'oysters', 'prawns',
-        'raw', 'cooked', 'canned', 'fried', 'grilled', 'baked', 'roasted', 'boiled', 'steamed'
-    ],
-    'vegetarian': [
-        'meat', 'chicken', 'beef', 'pork', 'fish', 'lamb', 'bacon', 'sausage', 'gelatin', 'shrimp', 
-        'tuna', 'salmon', 'sardines', 'anchovies', 'caviar', 'duck', 'goose', 'shellfish',
-        'chicken breast', 'chicken thigh', 'chicken wings', 'chicken legs', 'turkey', 'beef steak', 
-        'minced beef', 'ground beef', 'pork loin', 'pork belly', 'ham', 'prosciutto', 'lamb chops',
-        'duck breast', 'goose liver', 'pâté', 'salmon', 'tuna', 'sardines', 'mackerel', 'trout',
-        'cod', 'haddock', 'anchovies', 'halibut', 'sea bass', 'snapper', 'tilapia', 'flounder',
-        'swordfish', 'catfish', 'lobster', 'crab', 'mussels', 'scallops', 'oysters', 'prawns',
-        'raw', 'cooked', 'canned', 'fried', 'grilled', 'baked', 'roasted', 'boiled', 'steamed'
-    ],
-    'keto': [
-        'bread', 'pasta', 'rice', 'potato', 'sugar', 'beans', 'legumes', 'grains', 'honey', 
-        'corn', 'quinoa', 'oats', 'barley', 'carrot', 'pumpkin', 'sweet potato', 'beetroot'
-    ],
-    'paleo': [
-        'dairy', 'grains', 'legumes', 'sugar', 'processed foods', 'corn', 'rice', 'quinoa', 
-        'oats', 'barley', 'peanuts', 'soy', 'tofu', 'tempeh', 'chickpeas', 'lentils'
-    ],
-    'gluten-free': [
-        'wheat', 'barley', 'rye', 'bread', 'pasta', 'flour', 'croutons', 'bulgur', 'semolina', 
-        'spelt', 'kamut', 'couscous', 'malt', 'farro', 'oats (unless certified gluten-free)'
-    ],
-    'dairy-free': [
-        'milk', 'cheese', 'butter', 'cream', 'yogurt', 'whey', 'casein', 'ghee', 'clarified butter',
-        'ice cream', 'buttermilk', 'milk powder', 'custard', 'evaporated milk', 'condensed milk',
-        'mozzarella cheese', 'parmesan cheese', 'cheddar cheese', 'brie cheese', 'blue cheese', 
-        'gouda cheese', 'camembert cheese', 'feta cheese', 'goat cheese', 'cream cheese', 'ricotta cheese'
-    ]
-}
+        # Add your diet preference keywords...
+    }
 
-
-    # Classify functions for each diet preference
-    def classify_vegan(ingredients):
-        return 1 if not any(kw in ingredients for kw in dietary_keywords['vegan']) else 0
-
-    def classify_vegetarian(ingredients):
-        return 1 if not any(kw in ingredients for kw in dietary_keywords['vegetarian']) else 0
-
-    def classify_keto(ingredients):
-        return 1 if not any(kw in ingredients for kw in dietary_keywords['keto']) else 0
-
-    def classify_paleo(ingredients):
-        return 1 if not any(kw in ingredients for kw in dietary_keywords['paleo']) else 0
-
-    def classify_gluten_free(ingredients):
-        return 1 if not any(kw in ingredients for kw in dietary_keywords['gluten-free']) else 0
-
-    def classify_dairy_free(ingredients):
-        return 1 if not any(kw in ingredients for kw in dietary_keywords['dairy-free']) else 0
-
-    # Apply classifications to meals DataFrame
-    meals_df['vegan'] = meals_df['ingredients'].apply(lambda ingredients: classify_vegan(ingredients))
-    meals_df['vegetarian'] = meals_df['ingredients'].apply(lambda ingredients: classify_vegetarian(ingredients))
-    meals_df['keto'] = meals_df['ingredients'].apply(lambda ingredients: classify_keto(ingredients))
-    meals_df['paleo'] = meals_df['ingredients'].apply(lambda ingredients: classify_paleo(ingredients))
-    meals_df['gluten_free'] = meals_df['ingredients'].apply(lambda ingredients: classify_gluten_free(ingredients))
-    meals_df['dairy_free'] = meals_df['ingredients'].apply(lambda ingredients: classify_dairy_free(ingredients))
+    # Your classification logic...
 
     return meals_df
 
-
-# Load the meals data from 'Meals.csv'
-def load_meals(meals_csv_path):
-    meals_df = pd.read_csv(meals_csv_path, encoding='ISO-8859-1')  # Load the meals CSV
-    meals_df['ingredients'] = meals_df['ingredients'].fillna('').astype(str)
-    meals_df['ingredients'] = meals_df['ingredients'].apply(lambda x: [i.strip().lower() for i in x.split(',')])
-
-    # Automatically classify meals based on the ingredients
-    meals_df = classify_meals(meals_df)
-
-    return meals_df
-
+# Load meals and apply dietary classification
 meals_csv_path = 'finalMeals.csv'
 meals_df = load_meals(meals_csv_path)
 
-# Function to create features for ingredients
 def create_features_vectorized(ingredients_list):
     features_df = pd.DataFrame(0, index=ingredients_list.index, columns=unique_allergens)
     for allergen, allergens in allergen_mapping.items():
@@ -131,7 +59,6 @@ def create_features_vectorized(ingredients_list):
                 features_df.loc[ingredients_mask, allergy] = 1
     return features_df
 
-# Function to predict meal safety based on allergies and dietary preferences
 def predict_meal_safety_with_diet(ingredients_list, user_allergies, diet_preference):
     features_df = create_features_vectorized(ingredients_list)
     predictions_df = pd.DataFrame(0, index=features_df.index, columns=unique_allergens)
@@ -144,7 +71,7 @@ def predict_meal_safety_with_diet(ingredients_list, user_allergies, diet_prefere
     unsafe_mask = predictions_df[user_allergies].max(axis=1) == 1
     safe_meals = meals_df.loc[~unsafe_mask]
 
-        # Apply dietary preference filter
+    # Apply dietary preference filter
     if diet_preference in meals_df.columns:
         safe_meals = safe_meals[safe_meals[diet_preference] == 1]
 
@@ -159,14 +86,10 @@ def predict():
     db = initialize_firestore()
     user_data = get_user_data_from_firestore(db, user_id)
     
-    # Debugging: print fetched user data to ensure it exists
-    print(f"Fetched user data: {user_data}")
-    
-    # Check if user_data is None (i.e., if the user was not found in Firestore)
     if not user_data:
         return jsonify({"error": "User data not found"}), 404
     
-    # Extract relevant NutriInfo fields
+    # Extract NutriInfo fields
     user_allergies = user_data.get('allergies', [])
     diet_preference = user_data.get('diet', 'none')
     weight = user_data.get('weight')
@@ -186,4 +109,4 @@ def predict():
 
 
 if __name__ == '__main__':
-    app.run(host='localhost', port=5001, debug=True)
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)), debug=True)
