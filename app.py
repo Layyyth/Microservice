@@ -158,8 +158,12 @@ def predict_meal_safety_with_diet(ingredients_list, user_allergies, diet_prefere
 
     return safe_meals['recipeName'].tolist()
 
-@app.route('/predict', methods=['POST'])
+@app.route('/predict', methods=['POST', 'OPTIONS'])
 def predict():
+    if request.method == 'OPTIONS':
+        # CORS preflight response
+        return jsonify({"status": "OK"}), 200
+        
     data = request.json
     user_id = data.get('user_id')
     
