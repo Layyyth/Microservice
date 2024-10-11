@@ -11,7 +11,8 @@ from caloriesLogic import get_daily_calories, validate_user_data
 
 app = Flask(__name__)
 
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "https://localhost:5173"}})
+
 
 # Load the trained models (update with your actual model file path)
 model_filename = 'mealPredictingModel_2024-09-21_08-01-49.pkl'
@@ -163,7 +164,7 @@ def predict():
     if request.method == 'OPTIONS':
         # CORS preflight response
         return jsonify({"status": "OK"}), 200
-        
+
     data = request.json
     user_id = data.get('user_id')
     
