@@ -4,11 +4,14 @@ import pandas as pd
 import pickle
 from caloriesLogic import get_daily_calories
 from firebaseHandler import initialize_firestore, get_user_data_from_firestore
+from flask_cors import CORS
 
 # Import functions from caloriesLogic.py
 from caloriesLogic import get_daily_calories, validate_user_data
 
 app = Flask(__name__)
+
+CORS(app)
 
 # Load the trained models (update with your actual model file path)
 model_filename = 'mealPredictingModel_2024-09-21_08-01-49.pkl'
@@ -192,3 +195,4 @@ def predict():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)), debug=True)
+
