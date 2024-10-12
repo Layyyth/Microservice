@@ -11,7 +11,7 @@ from caloriesLogic import get_daily_calories, validate_user_data
 
 app = Flask(__name__)
 
-CORS(app, resources={r"/*": {"origins": "https://localhost:5173"}})
+CORS(app, resources={r"/*": {"origins": "https://nutriwise.vercel.app"}})
 
 
 # Load the trained models (update with your actual model file path)
