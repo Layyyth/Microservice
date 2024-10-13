@@ -159,7 +159,7 @@ def predict_meal_safety_with_diet(ingredients_list, user_allergies, diet_prefere
 
     return safe_meals['recipeName'].tolist()
 
-@app.route('/predict', methods=['POST', 'GET', 'OPTIONS'])
+@app.route('/predict', methods=['GET', 'POST','OPTIONS'])
 def predict():
     if request.method == 'OPTIONS':
         # CORS preflight response
