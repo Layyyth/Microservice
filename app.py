@@ -4,15 +4,11 @@ import pandas as pd
 import pickle
 from caloriesLogic import get_daily_calories
 from firebaseHandler import initialize_firestore, get_user_data_from_firestore
-from flask_cors import CORS
 
 # Import functions from caloriesLogic.py
 from caloriesLogic import get_daily_calories, validate_user_data
 
 app = Flask(__name__)
-
-CORS(app, resources={r"/*": {"origins": "https://nutriwise.vercel.app"}})
-
 
 # Load the trained models (update with your actual model file path)
 model_filename = 'mealPredictingModel_2024-09-21_08-01-49.pkl'
@@ -159,31 +155,22 @@ def predict_meal_safety_with_diet(ingredients_list, user_allergies, diet_prefere
 
     return safe_meals['recipeName'].tolist()
 
-@app.route('/predict', methods=['GET', 'POST','OPTIONS'])
+@app.route('/predict', methods=['POST'])
 def predict():
-    if request.method == 'OPTIONS':
-        # CORS preflight response
-        return jsonify({"status": "OK"}), 200
+    data = request.json
+    user_id = data.get('user_id')
     
-    if request.method == 'GET':
-        # Mock user_id for GET request testing (you can pass it as a query param)
-        user_id = request.args.get('user_id', default='S7Hehcqz6qhhy38ZemmEg2tKPki2')  # Use a default user ID
-    else:
-        # Handle POST request
-        data = request.json
-        user_id = data.get('user_id')
-
     # Initialize Firestore and fetch user data
     db = initialize_firestore()
     user_data = get_user_data_from_firestore(db, user_id)
-
+    
     # Debugging: print fetched user data to ensure it exists
     print(f"Fetched user data: {user_data}")
-
+    
     # Check if user_data is None (i.e., if the user was not found in Firestore)
     if not user_data:
         return jsonify({"error": "User data not found"}), 404
-
+    
     # Extract relevant NutriInfo fields
     user_allergies = user_data.get('allergies', [])
     diet_preference = user_data.get('diet', 'none')
@@ -202,6 +189,6 @@ def predict():
 
     return jsonify({'safe_meals': safe_meals, 'daily_calories': daily_calories})
 
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)), debug=True)
-
