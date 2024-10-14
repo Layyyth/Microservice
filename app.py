@@ -12,8 +12,12 @@ from flask import Flask, request, jsonify, make_response
 from caloriesLogic import get_daily_calories, validate_user_data
 
 app = Flask(__name__)
+CORS(app, resources={r"/*": {
+    "origins": "https://nutri-wise.vercel.app",
+    "allow_headers": ["Content-Type", "Authorization"],
+    "methods": ["GET", "POST", "OPTIONS"]
+}})
 
-CORS(app, resources={r"/*": {"origins": "https://nutri-wise.vercel.app"}}, methods=["GET", "POST", "OPTIONS"])
 
 # Load the trained models (update with your actual model file path)
 model_filename = 'mealPredictingModel_2024-09-21_08-01-49.pkl'
@@ -177,10 +181,6 @@ def predict():
         user_id = data.get('user_id')
         print(f"POST request received with user_id: {user_id}")
 
-    # Regular response (Replace with actual logic)
-    return jsonify({'message': 'Request processed successfully', 'user_id': user_id})
-
-
     # Initialize Firestore and fetch user data
     db = initialize_firestore()
     user_data = get_user_data_from_firestore(db, user_id)
@@ -208,8 +208,8 @@ def predict():
     # Calculate daily caloric needs
     daily_calories = get_daily_calories(weight, height, age, gender, activity_level, goal)
 
+    # Return the actual response with predicted meals and calorie needs
     return jsonify({'safe_meals': safe_meals, 'daily_calories': daily_calories})
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)), debug=True)
-
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5001)), debug=True)
