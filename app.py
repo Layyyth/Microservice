@@ -10,7 +10,7 @@ from caloriesLogic import get_daily_calories, validate_user_data
 
 
 app = Flask(__name__)
-CORS(app, resources={r'/*': {'origins': '*'}})
+CORS(app, resources={r'/*': {'origins': 'https://nutri-wise.vercel.app'}}, methods=['GET', 'POST', 'OPTIONS'])
 
 #s
 
@@ -154,13 +154,19 @@ def predict_meal_safety_with_diet(ingredients_list, user_allergies, diet_prefere
 
 @app.route('/predict', methods=['GET', 'POST', 'OPTIONS'])
 def predict():
+    if request.method == 'OPTIONS':
+        response = make_response()
+        response.headers.add('Access-Control-Allow-Origin', 'https://nutri-wise.vercel.app')
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+        response.headers.add('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
+        return response, 200
     
     if request.method == 'GET':
         # For GET requests, extract 'user_id' from query parameters
         user_id = request.args.get('user_id', default='S7Hehcqz6qhhy38ZemmEg2tKPki2')  # Default user ID for testing
         print(f"GET request received with user_id: {user_id}")
 
-    elif request.method == 'POST':
+    if request.method == 'POST':
         # For POST requests, extract 'user_id' from JSON body
         data = request.json
         user_id = data.get('user_id')
