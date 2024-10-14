@@ -14,6 +14,14 @@ CORS(app, resources={r'/*': {'origins': 'https://nutri-wise.vercel.app'}}, metho
 
 #s
 
+@app.after_request
+def after_request(response):
+    # Ensure all responses include these headers
+    response.headers.add('Access-Control-Allow-Origin', 'https://nutri-wise.vercel.app')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
+    return response
+
 # Load the trained models (update with your actual model file path)
 model_filename = 'mealPredictingModel_2024-09-21_08-01-49.pkl'
 with open(model_filename, 'rb') as model_file:
