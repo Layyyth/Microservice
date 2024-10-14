@@ -1,19 +1,17 @@
 import os
 from flask import Flask, request, jsonify
-from flask_cors import cross_origin
+from flask_cors import CORS
 import pandas as pd
 import pickle
 from caloriesLogic import get_daily_calories
 from firebaseHandler import initialize_firestore, get_user_data_from_firestore
 from flask import Flask, request, jsonify, make_response
-
-
-
-# Import functions from caloriesLogic.py
 from caloriesLogic import get_daily_calories, validate_user_data
 
+
 app = Flask(__name__)
-#CORS = CORS(app, resources={r'/*': {'origins': '*'}})
+CORS(app, resources={r'/*': {'origins': '*'}})
+
 
 '''
 CORS(app, resources={r"/*": {
@@ -164,19 +162,8 @@ def predict_meal_safety_with_diet(ingredients_list, user_allergies, diet_prefere
     return safe_meals['recipeName'].tolist()
 
 @app.route('/predict', methods=['GET', 'POST', 'OPTIONS'])
-@cross_origin()
 def predict():
-    # Handle the preflight OPTIONS request
-    if request.method == 'OPTIONS':
-        response = make_response()
-        response.headers.add('Access-Control-Allow-Origin', 'https://nutri-wise.vercel.app')
-        response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
-        response.headers.add('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
-        return response
-
-    # Log the request method to track incoming requests
-    print(f"Request method: {request.method}")
-
+    
     if request.method == 'GET':
         # For GET requests, extract 'user_id' from query parameters
         user_id = request.args.get('user_id', default='S7Hehcqz6qhhy38ZemmEg2tKPki2')  # Default user ID for testing
