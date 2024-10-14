@@ -37,7 +37,7 @@ allergen_mapping = load_allergen_mapping(allergen_csv_path)
 @app.route('/')
 def index():
     return "Welcome to the Diet Recommendation Microservice! Use the '/predict' endpoint to get meal recommendations."
-
+    
 def classify_meals(meals_df):
     # Updated dictionary of keywords for each diet preference
     dietary_keywords = {
@@ -84,7 +84,7 @@ def classify_meals(meals_df):
     ]
 }
 
-    # Classify functions for each diet preference
+ # Classify functions for each diet preference
     def classify_vegan(ingredients):
         return 1 if not any(kw in ingredients for kw in dietary_keywords['vegan']) else 0
     def classify_vegetarian(ingredients):
@@ -153,12 +153,17 @@ def predict_meal_safety_with_diet(ingredients_list, user_allergies, diet_prefere
 
 @app.route('/predict', methods=['POST', 'GET'])
 def predict():
+    # Log the request method to track incoming requests
+    print(f"Request method: {request.method}")
+
     if request.method == 'GET':
         # For GET requests, extract 'user_id' from query parameters
         user_id = request.args.get('user_id', default='S7Hehcqz6qhhy38ZemmEg2tKPki2')  # Default user ID for testing
+        print(f"GET request received with user_id: {user_id}")
     elif request.method == 'POST':
         data = request.json
         user_id = data.get('user_id')
+        print(f"POST request received with user_id: {user_id}")
 
     # Initialize Firestore and fetch user data
     db = initialize_firestore()
@@ -193,3 +198,64 @@ if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)), debug=True)
 
 
+'''
+def classify_meals(meals_df):
+    # Updated dictionary of keywords for each diet preference
+    dietary_keywords = {
+    'vegan': [
+        'meat', 'chicken', 'beef', 'pork', 'fish', 'lamb', 'eggs', 'milk', 'cheese', 'butter', 'honey',
+        'bacon', 'sausage', 'gelatin', 'shrimp', 'tuna', 'salmon', 'sardines', 'anchovies', 'caviar',
+        'yogurt', 'cream', 'mayo', 'whey', 'casein', 'lard', 'tallow', 'duck', 'goose', 'shellfish',
+        'mozzarella cheese', 'parmesan cheese', 'cheddar cheese', 'brie cheese', 'blue cheese', 
+        'gouda cheese', 'camembert cheese', 'feta cheese', 'goat cheese', 'cream cheese', 'ricotta cheese',
+        'chicken breast', 'chicken thigh', 'chicken wings', 'chicken legs', 'turkey', 'beef steak', 
+        'minced beef', 'ground beef', 'pork loin', 'pork belly', 'ham', 'prosciutto', 'lamb chops',
+        'duck breast', 'goose liver', 'pâté', 'salmon', 'tuna', 'sardines', 'mackerel', 'trout',
+        'cod', 'haddock', 'anchovies', 'halibut', 'sea bass', 'snapper', 'tilapia', 'flounder',
+        'swordfish', 'catfish', 'lobster', 'crab', 'mussels', 'scallops', 'oysters', 'prawns',
+        'raw', 'cooked', 'canned', 'fried', 'grilled', 'baked', 'roasted', 'boiled', 'steamed'
+    ],
+    'vegetarian': [
+        'meat', 'chicken', 'beef', 'pork', 'fish', 'lamb', 'bacon', 'sausage', 'gelatin', 'shrimp', 
+        'tuna', 'salmon', 'sardines', 'anchovies', 'caviar', 'duck', 'goose', 'shellfish',
+        'chicken breast', 'chicken thigh', 'chicken wings', 'chicken legs', 'turkey', 'beef steak', 
+        'minced beef', 'ground beef', 'pork loin', 'pork belly', 'ham', 'prosciutto', 'lamb chops',
+        'duck breast', 'goose liver', 'pâté', 'salmon', 'tuna', 'sardines', 'mackerel', 'trout',
+        'cod', 'haddock', 'anchovies', 'halibut', 'sea bass', 'snapper', 'tilapia', 'flounder',
+        'swordfish', 'catfish', 'lobster', 'crab', 'mussels', 'scallops', 'oysters', 'prawns',
+        'raw', 'cooked', 'canned', 'fried', 'grilled', 'baked', 'roasted', 'boiled', 'steamed'
+    ],
+    'keto': [
+        'bread', 'pasta', 'rice', 'potato', 'sugar', 'beans', 'legumes', 'grains', 'honey', 
+        'corn', 'quinoa', 'oats', 'barley', 'carrot', 'pumpkin', 'sweet potato', 'beetroot'
+    ],
+    'paleo': [
+        'dairy', 'grains', 'legumes', 'sugar', 'processed foods', 'corn', 'rice', 'quinoa', 
+        'oats', 'barley', 'peanuts', 'soy', 'tofu', 'tempeh', 'chickpeas', 'lentils'
+    ],
+    'gluten-free': [
+        'wheat', 'barley', 'rye', 'bread', 'pasta', 'flour', 'croutons', 'bulgur', 'semolina', 
+        'spelt', 'kamut', 'couscous', 'malt', 'farro', 'oats (unless certified gluten-free)'
+    ],
+    'dairy-free': [
+        'milk', 'cheese', 'butter', 'cream', 'yogurt', 'whey', 'casein', 'ghee', 'clarified butter',
+        'ice cream', 'buttermilk', 'milk powder', 'custard', 'evaporated milk', 'condensed milk',
+        'mozzarella cheese', 'parmesan cheese', 'cheddar cheese', 'brie cheese', 'blue cheese', 
+        'gouda cheese', 'camembert cheese', 'feta cheese', 'goat cheese', 'cream cheese', 'ricotta cheese'
+    ]
+}
+
+ # Classify functions for each diet preference
+    def classify_vegan(ingredients):
+        return 1 if not any(kw in ingredients for kw in dietary_keywords['vegan']) else 0
+    def classify_vegetarian(ingredients):
+        return 1 if not any(kw in ingredients for kw in dietary_keywords['vegetarian']) else 0
+    def classify_keto(ingredients):
+        return 1 if not any(kw in ingredients for kw in dietary_keywords['keto']) else 0
+    def classify_paleo(ingredients):
+        return 1 if not any(kw in ingredients for kw in dietary_keywords['paleo']) else 0
+    def classify_gluten_free(ingredients):
+        return 1 if not any(kw in ingredients for kw in dietary_keywords['gluten-free']) else 0
+    def classify_dairy_free(ingredients):
+        return 1 if not any(kw in ingredients for kw in dietary_keywords['dairy-free']) else 0
+'''
