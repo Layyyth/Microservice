@@ -81,23 +81,17 @@ def classify_meals(meals_df):
     ]
 }
 
-
     # Classify functions for each diet preference
     def classify_vegan(ingredients):
         return 1 if not any(kw in ingredients for kw in dietary_keywords['vegan']) else 0
-
     def classify_vegetarian(ingredients):
         return 1 if not any(kw in ingredients for kw in dietary_keywords['vegetarian']) else 0
-
     def classify_keto(ingredients):
         return 1 if not any(kw in ingredients for kw in dietary_keywords['keto']) else 0
-
     def classify_paleo(ingredients):
         return 1 if not any(kw in ingredients for kw in dietary_keywords['paleo']) else 0
-
     def classify_gluten_free(ingredients):
         return 1 if not any(kw in ingredients for kw in dietary_keywords['gluten-free']) else 0
-
     def classify_dairy_free(ingredients):
         return 1 if not any(kw in ingredients for kw in dietary_keywords['dairy-free']) else 0
 
@@ -110,7 +104,6 @@ def classify_meals(meals_df):
     meals_df['dairy_free'] = meals_df['ingredients'].apply(lambda ingredients: classify_dairy_free(ingredients))
 
     return meals_df
-
 
 # Load the meals data from 'Meals.csv'
 def load_meals(meals_csv_path):
@@ -149,28 +142,32 @@ def predict_meal_safety_with_diet(ingredients_list, user_allergies, diet_prefere
     unsafe_mask = predictions_df[user_allergies].max(axis=1) == 1
     safe_meals = meals_df.loc[~unsafe_mask]
 
-        # Apply dietary preference filter
+    # Apply dietary preference filter
     if diet_preference in meals_df.columns:
         safe_meals = safe_meals[safe_meals[diet_preference] == 1]
 
     return safe_meals['recipeName'].tolist()
 
-@app.route('/predict', methods=['POST'])
+@app.route('/predict', methods=['POST', 'GET'])
 def predict():
-    data = request.json
-    user_id = data.get('user_id')
-    
+    if request.method == 'GET':
+        # For GET requests, extract 'user_id' from query parameters
+        user_id = request.args.get('user_id', default='S7Hehcqz6qhhy38ZemmEg2tKPki2')  # Default user ID for testing
+    elif request.method == 'POST':
+        data = request.json
+        user_id = data.get('user_id')
+
     # Initialize Firestore and fetch user data
     db = initialize_firestore()
     user_data = get_user_data_from_firestore(db, user_id)
-    
+
     # Debugging: print fetched user data to ensure it exists
     print(f"Fetched user data: {user_data}")
-    
+
     # Check if user_data is None (i.e., if the user was not found in Firestore)
     if not user_data:
         return jsonify({"error": "User data not found"}), 404
-    
+
     # Extract relevant NutriInfo fields
     user_allergies = user_data.get('allergies', [])
     diet_preference = user_data.get('diet', 'none')
@@ -189,6 +186,7 @@ def predict():
 
     return jsonify({'safe_meals': safe_meals, 'daily_calories': daily_calories})
 
-
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)), debug=True)
+
+
