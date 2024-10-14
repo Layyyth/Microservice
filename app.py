@@ -12,7 +12,7 @@ from flask import Flask, request, jsonify, make_response
 from caloriesLogic import get_daily_calories, validate_user_data
 
 app = Flask(__name__)
-CORS = CORS(app, resources={r'/predict': {'origins': '*'}})
+CORS = CORS(app, resources={r'/*': {'origins': '*'}})
 
 '''
 CORS(app, resources={r"/*": {
