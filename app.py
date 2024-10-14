@@ -11,7 +11,7 @@ from caloriesLogic import get_daily_calories, validate_user_data
 
 app = Flask(__name__)
 
-#CORS(app, resources={r"/*": {"origins": "https://nutri-wise.vercel.app"}}, methods=["GET", "POST", "OPTIONS"])
+CORS(app, resources={r"/*": {"origins": "https://nutri-wise.vercel.app"}}, methods=["GET", "POST", "OPTIONS"])
 
 # Load the trained models (update with your actual model file path)
 model_filename = 'mealPredictingModel_2024-09-21_08-01-49.pkl'
