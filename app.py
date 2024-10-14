@@ -13,16 +13,6 @@ app = Flask(__name__)
 CORS(app, resources={r'/*': {'origins': '*'}})
 
 
-'''
-CORS(app, resources={r"/*": {
-    "origins": "https://nutri-wise.vercel.app",
-    "allow_headers": ["Content-Type", "Authorization"],
-    "methods": ["GET", "POST", "OPTIONS"]
-}})
-'''
-
-
-
 # Load the trained models (update with your actual model file path)
 model_filename = 'mealPredictingModel_2024-09-21_08-01-49.pkl'
 with open(model_filename, 'rb') as model_file:
