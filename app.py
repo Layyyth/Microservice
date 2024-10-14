@@ -164,7 +164,7 @@ def predict_meal_safety_with_diet(ingredients_list, user_allergies, diet_prefere
     return safe_meals['recipeName'].tolist()
 
 @app.route('/predict', methods=['GET', 'POST', 'OPTIONS'])
-@cross_origin
+@cross_origin()
 def predict():
     # Handle the preflight OPTIONS request
     if request.method == 'OPTIONS':
