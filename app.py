@@ -37,7 +37,7 @@ allergen_mapping = load_allergen_mapping(allergen_csv_path)
 @app.route('/')
 def index():
     return "Welcome to the Diet Recommendation Microservice! Use the '/predict' endpoint to get meal recommendations."
-    
+
 def classify_meals(meals_df):
     # Updated dictionary of keywords for each diet preference
     dietary_keywords = {
