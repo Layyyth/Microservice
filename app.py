@@ -1,5 +1,6 @@
 import os
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import pandas as pd
 import pickle
 from caloriesLogic import get_daily_calories
@@ -9,6 +10,8 @@ from firebaseHandler import initialize_firestore, get_user_data_from_firestore
 from caloriesLogic import get_daily_calories, validate_user_data
 
 app = Flask(__name__)
+
+CORS(app, resources={r"/*": {"origins": "https://nutri-wise.vercel.app"}})
 
 # Load the trained models (update with your actual model file path)
 model_filename = 'mealPredictingModel_2024-09-21_08-01-49.pkl'
