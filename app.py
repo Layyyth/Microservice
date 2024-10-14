@@ -1,6 +1,6 @@
 import os
 from flask import Flask, request, jsonify
-from flask_cors import CORS
+from flask_cors import cross_origin
 import pandas as pd
 import pickle
 from caloriesLogic import get_daily_calories
@@ -8,11 +8,12 @@ from firebaseHandler import initialize_firestore, get_user_data_from_firestore
 from flask import Flask, request, jsonify, make_response
 
 
+
 # Import functions from caloriesLogic.py
 from caloriesLogic import get_daily_calories, validate_user_data
 
 app = Flask(__name__)
-CORS = CORS(app, resources={r'/*': {'origins': '*'}})
+#CORS = CORS(app, resources={r'/*': {'origins': '*'}})
 
 '''
 CORS(app, resources={r"/*": {
@@ -163,6 +164,7 @@ def predict_meal_safety_with_diet(ingredients_list, user_allergies, diet_prefere
     return safe_meals['recipeName'].tolist()
 
 @app.route('/predict', methods=['GET', 'POST', 'OPTIONS'])
+@cross_origin
 def predict():
     # Handle the preflight OPTIONS request
     if request.method == 'OPTIONS':
