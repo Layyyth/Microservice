@@ -10,7 +10,7 @@ from caloriesLogic import get_daily_calories, validate_user_data
 
 
 app = Flask(__name__)
-CORS(app, resources={r'/*': {'origins': '*'}})
+CORS(app, resources={r'/*': {'origins': 'https://nutri-wise.vercel.app'}})
 
 #s
 
