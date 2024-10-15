@@ -12,16 +12,6 @@ from caloriesLogic import get_daily_calories, validate_user_data
 app = Flask(__name__)
 CORS(app, resources={r"/predict": {"origins": "https://nutri-wise.vercel.app", "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"]}})
 
-#s
-
-@app.after_request
-def after_request(response):
-    # Ensure all responses include these headers
-    response.headers.add('Access-Control-Allow-Origin', 'https://nutri-wise.vercel.app')
-    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
-    response.headers.add('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
-    return response
-
 # Load the trained models (update with your actual model file path)
 model_filename = 'mealPredictingModel_2024-09-21_08-01-49.pkl'
 with open(model_filename, 'rb') as model_file:
@@ -163,12 +153,8 @@ def predict_meal_safety_with_diet(ingredients_list, user_allergies, diet_prefere
 @app.route('/predict', methods=['GET', 'POST', 'OPTIONS'])
 def predict():
     if request.method == 'OPTIONS':
-        response = make_response()
-        response.headers.add('Access-Control-Allow-Origin', 'https://nutri-wise.vercel.app')
-        response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
-        response.headers.add('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
-        return response, 200
-    
+        return '', 200  # Simply return a 200 OK response for preflight requests
+
     if request.method == 'GET':
         # For GET requests, extract 'user_id' from query parameters
         user_id = request.args.get('user_id', default='S7Hehcqz6qhhy38ZemmEg2tKPki2')  # Default user ID for testing
@@ -209,6 +195,7 @@ def predict():
 
     # Return the actual response with predicted meals and calorie needs
     return jsonify({'safe_meals': safe_meals, 'daily_calories': daily_calories})
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5001)), debug=True)
