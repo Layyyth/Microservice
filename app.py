@@ -8,15 +8,19 @@ from firebaseHandler import initialize_firestore, get_user_data_from_firestore
 
 app = Flask(__name__)
 
+'''
 # Specify the allowed origins for CORS
 origins = [
     'https://nutri-wise.vercel.app',
     'https://nutri-wise-lq7zew6rf-layyyths-projects.vercel.app'
-    'https://whippet-just-endlessly.ngrok-free.app/'
 ]
+'''
 
 # Configure CORS for the /predict endpoint
-CORS(app, resources={r"/predict": {"origins": origins, "methods": ["GET", "POST", "OPTIONS"]}})
+#CORS(app, resources={r"/predict": {"origins": origins, "methods": ["GET", "POST", "OPTIONS"]}})
+
+CORS(app, resources={r"/predict": {"origins": "*", "methods": ["GET", "POST", "OPTIONS"]}})
+
 
 # Load the trained models
 model_filename = 'mealPredictingModel_2024-09-21_08-01-49.pkl'
