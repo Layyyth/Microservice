@@ -12,7 +12,6 @@ app = Flask(__name__)
 origins = [
     'https://nutri-wise.vercel.app',
     'https://nutri-wise-lq7zew6rf-layyyths-projects.vercel.app'
-    'ngrok-free.app'
 ]
 
 # Configure CORS for the /predict endpoint
