@@ -5,20 +5,19 @@ import pandas as pd
 import pickle
 from caloriesLogic import get_daily_calories
 from firebaseHandler import initialize_firestore, get_user_data_from_firestore
-from flask import Flask, request, jsonify, make_response
-from caloriesLogic import get_daily_calories, validate_user_data
-
 
 app = Flask(__name__)
 
+# Specify the allowed origins for CORS
 origins = [
     'https://nutri-wise.vercel.app',
     'https://nutri-wise-lq7zew6rf-layyyths-projects.vercel.app'
 ]
 
+# Configure CORS for the /predict endpoint
 CORS(app, resources={r"/predict": {"origins": origins, "methods": ["GET", "POST", "OPTIONS"]}})
 
-# Load the trained models (update with your actual model file path)
+# Load the trained models
 model_filename = 'mealPredictingModel_2024-09-21_08-01-49.pkl'
 with open(model_filename, 'rb') as model_file:
     models = pickle.load(model_file)
@@ -26,7 +25,7 @@ with open(model_filename, 'rb') as model_file:
 # Define the unique allergens from the trained model
 unique_allergens = list(models.keys())
 
-# Load the allergen mapping from 'Allergens.csv'
+# Load the allergen mapping from 'finalAllergens.csv'
 def load_allergen_mapping(allergen_csv_path):
     allergen_df = pd.read_csv(allergen_csv_path, encoding='ISO-8859-1')  # Specify encoding to avoid UnicodeDecodeError
     allergen_df.columns = allergen_df.columns.str.strip().str.lower()
@@ -43,84 +42,109 @@ allergen_mapping = load_allergen_mapping(allergen_csv_path)
 def index():
     return "Welcome to the Diet Recommendation Microservice! Use the '/predict' endpoint to get meal recommendations."
 
-def classify_meals(meals_df):
-    # Updated dictionary of keywords for each diet preference
-    dietary_keywords = {
+# Define dietary keywords for classification
+dietary_keywords = {
     'vegan': [
         'meat', 'chicken', 'beef', 'pork', 'fish', 'lamb', 'eggs', 'milk', 'cheese', 'butter', 'honey',
         'bacon', 'sausage', 'gelatin', 'shrimp', 'tuna', 'salmon', 'sardines', 'anchovies', 'caviar',
         'yogurt', 'cream', 'mayo', 'whey', 'casein', 'lard', 'tallow', 'duck', 'goose', 'shellfish',
-        'mozzarella cheese', 'parmesan cheese', 'cheddar cheese', 'brie cheese', 'blue cheese', 
+        'mozzarella cheese', 'parmesan cheese', 'cheddar cheese', 'brie cheese', 'blue cheese',
         'gouda cheese', 'camembert cheese', 'feta cheese', 'goat cheese', 'cream cheese', 'ricotta cheese',
-        'chicken breast', 'chicken thigh', 'chicken wings', 'chicken legs', 'turkey', 'beef steak', 
+        'chicken breast', 'chicken thigh', 'chicken wings', 'chicken legs', 'turkey', 'beef steak',
         'minced beef', 'ground beef', 'pork loin', 'pork belly', 'ham', 'prosciutto', 'lamb chops',
-        'duck breast', 'goose liver', 'pâté', 'salmon', 'tuna', 'sardines', 'mackerel', 'trout',
-        'cod', 'haddock', 'anchovies', 'halibut', 'sea bass', 'snapper', 'tilapia', 'flounder',
-        'swordfish', 'catfish', 'lobster', 'crab', 'mussels', 'scallops', 'oysters', 'prawns',
-        'raw', 'cooked', 'canned', 'fried', 'grilled', 'baked', 'roasted', 'boiled', 'steamed'
+        'duck breast', 'goose liver', 'pâté', 'mackerel', 'trout', 'cod', 'haddock', 'halibut',
+        'sea bass', 'snapper', 'tilapia', 'flounder', 'swordfish', 'catfish', 'lobster', 'crab',
+        'mussels', 'scallops', 'oysters', 'prawns'
     ],
     'vegetarian': [
-        'meat', 'chicken', 'beef', 'pork', 'fish', 'lamb', 'bacon', 'sausage', 'gelatin', 'shrimp', 
+        'meat', 'chicken', 'beef', 'pork', 'fish', 'lamb', 'bacon', 'sausage', 'gelatin', 'shrimp',
         'tuna', 'salmon', 'sardines', 'anchovies', 'caviar', 'duck', 'goose', 'shellfish',
-        'chicken breast', 'chicken thigh', 'chicken wings', 'chicken legs', 'turkey', 'beef steak', 
+        'chicken breast', 'chicken thigh', 'chicken wings', 'chicken legs', 'turkey', 'beef steak',
         'minced beef', 'ground beef', 'pork loin', 'pork belly', 'ham', 'prosciutto', 'lamb chops',
-        'duck breast', 'goose liver', 'pâté', 'salmon', 'tuna', 'sardines', 'mackerel', 'trout',
-        'cod', 'haddock', 'anchovies', 'halibut', 'sea bass', 'snapper', 'tilapia', 'flounder',
-        'swordfish', 'catfish', 'lobster', 'crab', 'mussels', 'scallops', 'oysters', 'prawns',
-        'raw', 'cooked', 'canned', 'fried', 'grilled', 'baked', 'roasted', 'boiled', 'steamed'
+        'duck breast', 'goose liver', 'pâté', 'mackerel', 'trout', 'cod', 'haddock', 'halibut',
+        'sea bass', 'snapper', 'tilapia', 'flounder', 'swordfish', 'catfish', 'lobster', 'crab',
+        'mussels', 'scallops', 'oysters', 'prawns'
     ],
     'keto': [
-        'bread', 'pasta', 'rice', 'potato', 'sugar', 'beans', 'legumes', 'grains', 'honey', 
+        'bread', 'pasta', 'rice', 'potato', 'sugar', 'beans', 'legumes', 'grains', 'honey',
         'corn', 'quinoa', 'oats', 'barley', 'carrot', 'pumpkin', 'sweet potato', 'beetroot'
     ],
     'paleo': [
-        'dairy', 'grains', 'legumes', 'sugar', 'processed foods', 'corn', 'rice', 'quinoa', 
+        'dairy', 'grains', 'legumes', 'sugar', 'processed foods', 'corn', 'rice', 'quinoa',
         'oats', 'barley', 'peanuts', 'soy', 'tofu', 'tempeh', 'chickpeas', 'lentils'
     ],
-    'gluten-free': [
-        'wheat', 'barley', 'rye', 'bread', 'pasta', 'flour', 'croutons', 'bulgur', 'semolina', 
+    'gluten_free': [
+        'wheat', 'barley', 'rye', 'bread', 'pasta', 'flour', 'croutons', 'bulgur', 'semolina',
         'spelt', 'kamut', 'couscous', 'malt', 'farro', 'oats (unless certified gluten-free)'
     ],
-    'dairy-free': [
+    'dairy_free': [
         'milk', 'cheese', 'butter', 'cream', 'yogurt', 'whey', 'casein', 'ghee', 'clarified butter',
         'ice cream', 'buttermilk', 'milk powder', 'custard', 'evaporated milk', 'condensed milk',
-        'mozzarella cheese', 'parmesan cheese', 'cheddar cheese', 'brie cheese', 'blue cheese', 
+        'mozzarella cheese', 'parmesan cheese', 'cheddar cheese', 'brie cheese', 'blue cheese',
         'gouda cheese', 'camembert cheese', 'feta cheese', 'goat cheese', 'cream cheese', 'ricotta cheese'
     ]
 }
 
-# Classify functions for each diet preference
-    def classify_vegan(ingredients):
-        return 1 if not any(kw in ingredients for kw in dietary_keywords['vegan']) else 0
-    def classify_vegetarian(ingredients):
-        return 1 if not any(kw in ingredients for kw in dietary_keywords['vegetarian']) else 0
-    def classify_keto(ingredients):
-        return 1 if not any(kw in ingredients for kw in dietary_keywords['keto']) else 0
-    def classify_paleo(ingredients):
-        return 1 if not any(kw in ingredients for kw in dietary_keywords['paleo']) else 0
-    def classify_gluten_free(ingredients):
-        return 1 if not any(kw in ingredients for kw in dietary_keywords['gluten-free']) else 0
-    def classify_dairy_free(ingredients):
-        return 1 if not any(kw in ingredients for kw in dietary_keywords['dairy-free']) else 0
+# Define meal time keywords for classification
+meal_time_keywords = {
+    'breakfast': [
+        'egg', 'pancake', 'waffle', 'toast', 'cereal', 'smoothie', 'oatmeal', 'yogurt',
+        'bagel', 'granola', 'omelette', 'muffin', 'bacon', 'sausage', 'frittata', 'scramble',
+        'hash brown', 'quiche', 'crepe', 'french toast', 'porridge', 'breakfast', 'brunch'
+    ],
+    'lunch': [
+        'sandwich', 'salad', 'wrap', 'burger', 'soup', 'panini', 'burrito', 'taco', 'pita',
+        'noodle', 'rice bowl', 'quesadilla', 'sub', 'hoagie', 'gyro', 'lunch', 'midday'
+    ],
+    'dinner': [
+        'pasta', 'steak', 'curry', 'stir fry', 'roast', 'casserole', 'lasagna', 'pizza',
+        'risotto', 'grill', 'barbecue', 'bbq', 'shepherd\'s pie', 'meatloaf', 'dinner',
+        'evening', 'supper', 'entree', 'main course'
+    ]
+}
+
+# Function to classify meals based on dietary preferences
+def classify_meals(meals_df):
+    # Classify functions for each diet preference
+    def classify_diet(ingredients, diet):
+        return 1 if not any(kw in ingredients for kw in dietary_keywords[diet]) else 0
 
     # Apply classifications to meals DataFrame
-    meals_df['vegan'] = meals_df['ingredients'].apply(lambda ingredients: classify_vegan(ingredients))
-    meals_df['vegetarian'] = meals_df['ingredients'].apply(lambda ingredients: classify_vegetarian(ingredients))
-    meals_df['keto'] = meals_df['ingredients'].apply(lambda ingredients: classify_keto(ingredients))
-    meals_df['paleo'] = meals_df['ingredients'].apply(lambda ingredients: classify_paleo(ingredients))
-    meals_df['gluten_free'] = meals_df['ingredients'].apply(lambda ingredients: classify_gluten_free(ingredients))
-    meals_df['dairy_free'] = meals_df['ingredients'].apply(lambda ingredients: classify_dairy_free(ingredients))
+    for diet in dietary_keywords.keys():
+        meals_df[diet] = meals_df['ingredients'].apply(lambda ingredients: classify_diet(ingredients, diet))
 
     return meals_df
 
-# Load the meals data from 'Meals.csv'
+# Function to classify meals based on meal times
+def classify_meal_times(meals_df):
+    # Initialize columns for meal times
+    for meal_time in meal_time_keywords.keys():
+        meals_df[meal_time] = 0
+
+    # Function to classify a single meal
+    def classify_meal(row):
+        # Combine recipe name and ingredients into one text
+        text = row['recipeName'].lower() + ' ' + ' '.join(row['ingredients'])
+        for meal_time, keywords in meal_time_keywords.items():
+            if any(keyword in text for keyword in keywords):
+                row[meal_time] = 1
+        return row
+
+    # Apply the classification to each meal
+    meals_df = meals_df.apply(classify_meal, axis=1)
+    return meals_df
+
+# Load the meals data from 'finalMeals.csv'
 def load_meals(meals_csv_path):
-    meals_df = pd.read_csv(meals_csv_path, encoding='ISO-8859-1')  # Load the meals CSV
+    meals_df = pd.read_csv(meals_csv_path, encoding='ISO-8859-1')
     meals_df['ingredients'] = meals_df['ingredients'].fillna('').astype(str)
     meals_df['ingredients'] = meals_df['ingredients'].apply(lambda x: [i.strip().lower() for i in x.split(',')])
 
     # Automatically classify meals based on the ingredients
     meals_df = classify_meals(meals_df)
+
+    # Classify meals based on meal times
+    meals_df = classify_meal_times(meals_df)
 
     return meals_df
 
@@ -138,7 +162,7 @@ def create_features_vectorized(ingredients_list):
     return features_df
 
 # Function to predict meal safety based on allergies and dietary preferences
-def predict_meal_safety_with_diet(ingredients_list, user_allergies, diet_preference):
+def predict_meal_safety_with_diet(ingredients_list, user_allergies, diet_preference, meal_time=None):
     features_df = create_features_vectorized(ingredients_list)
     predictions_df = pd.DataFrame(0, index=features_df.index, columns=unique_allergens)
 
@@ -154,23 +178,39 @@ def predict_meal_safety_with_diet(ingredients_list, user_allergies, diet_prefere
     if diet_preference in meals_df.columns:
         safe_meals = safe_meals[safe_meals[diet_preference] == 1]
 
-    return safe_meals['recipeName'].tolist()
+    # Apply meal time filter
+    if meal_time and meal_time in meal_time_keywords:
+        safe_meals = safe_meals[safe_meals[meal_time] == 1]
 
+    # Prepare the response data
+    safe_meals_list = safe_meals['recipeName'].tolist()
+
+    return safe_meals_list
+
+# Define the /predict endpoint
 @app.route('/predict', methods=['GET', 'POST', 'OPTIONS'])
 def predict():
     if request.method == 'OPTIONS':
         return '', 200  # Simply return a 200 OK response for preflight requests
 
     if request.method == 'GET':
-        # For GET requests, extract 'user_id' from query parameters
+        # For GET requests, extract 'user_id' and 'meal_time' from query parameters
         user_id = request.args.get('user_id', default='S7Hehcqz6qhhy38ZemmEg2tKPki2')  # Default user ID for testing
-        print(f"GET request received with user_id: {user_id}")
+        meal_time = request.args.get('meal_time', default=None)
+        print(f"GET request received with user_id: {user_id}, meal_time: {meal_time}")
 
-    if request.method == 'POST':
-        # For POST requests, extract 'user_id' from JSON body
+    elif request.method == 'POST':
+        # For POST requests, extract 'user_id' and 'meal_time' from JSON body
         data = request.json
         user_id = data.get('user_id')
-        print(f"POST request received with user_id: {user_id}")
+        meal_time = data.get('meal_time')
+        print(f"POST request received with user_id: {user_id}, meal_time: {meal_time}")
+
+    # Normalize and validate meal_time
+    if meal_time:
+        meal_time = meal_time.lower()
+        if meal_time not in meal_time_keywords:
+            return jsonify({"error": f"Invalid meal_time '{meal_time}'. Valid options are 'breakfast', 'lunch', or 'dinner'."}), 400
 
     # Initialize Firestore and fetch user data
     db = initialize_firestore()
@@ -193,8 +233,13 @@ def predict():
     activity_level = user_data.get('activity')
     goal = user_data.get('goal')
 
-    # Perform meal safety prediction
-    safe_meals = predict_meal_safety_with_diet(meals_df['ingredients'], user_allergies, diet_preference)
+    # Perform meal safety prediction with meal_time
+    safe_meals = predict_meal_safety_with_diet(
+        meals_df['ingredients'],
+        user_allergies,
+        diet_preference,
+        meal_time
+    )
 
     # Calculate daily caloric needs
     daily_calories = get_daily_calories(weight, height, age, gender, activity_level, goal)
@@ -202,7 +247,5 @@ def predict():
     # Return the actual response with predicted meals and calorie needs
     return jsonify({'safe_meals': safe_meals, 'daily_calories': daily_calories})
 
-
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5001)), debug=True)
-
