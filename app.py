@@ -8,19 +8,15 @@ from firebaseHandler import initialize_firestore, get_user_data_from_firestore
 
 app = Flask(__name__)
 
-'''
 # Specify the allowed origins for CORS
 origins = [
     'https://nutri-wise.vercel.app',
-    'https://nutri-wise-lq7zew6rf-layyyths-projects.vercel.app'
+    'https://nutri-wise-lq7zew6rf-layyyths-projects.vercel.app',
+    'https://whippet-just-endlessly.ngrok-free.app'  # Include the ngrok URL
 ]
-'''
 
 # Configure CORS for the /predict endpoint
-#CORS(app, resources={r"/predict": {"origins": origins, "methods": ["GET", "POST", "OPTIONS"]}})
-
-CORS(app, resources={r"/predict": {"origins": "*", "methods": ["GET", "POST", "OPTIONS"]}})
-
+CORS(app, resources={r"/predict": {"origins": origins, "methods": ["GET", "POST", "OPTIONS"]}})
 
 # Load the trained models
 model_filename = 'mealPredictingModel_2024-09-21_08-01-49.pkl'
@@ -108,6 +104,17 @@ meal_time_keywords = {
     ]
 }
 
+# Function to normalize ingredient lists
+def normalize_ingredient_list(ingredients):
+    if isinstance(ingredients, str):
+        # Convert comma-separated string to a list
+        return [ing.strip().lower() for ing in ingredients.split(',')]
+    elif isinstance(ingredients, list):
+        # Ensure all ingredients are in lowercase
+        return [ing.strip().lower() for ing in ingredients]
+    else:
+        return None  # Invalid format
+
 # Function to classify meals based on dietary preferences
 def classify_meals(meals_df):
     # Classify functions for each diet preference
@@ -166,8 +173,24 @@ def create_features_vectorized(ingredients_list):
                 features_df.loc[ingredients_mask, allergy] = 1
     return features_df
 
-# Function to predict meal safety based on allergies and dietary preferences
-def predict_meal_safety_with_diet(ingredients_list, user_allergies, diet_preference, meal_time=None):
+# Function to check if an ingredient is in the list (partial matching)
+def ingredient_in_list(ingredient_list, ingredient):
+    return any(ingredient in ing for ing in ingredient_list)
+
+# Function to predict meal safety based on various filters
+def predict_meal_safety_with_diet(
+    ingredients_list,
+    user_allergies,
+    diet_preference,
+    meal_time=None,
+    included_ingredients=None,
+    excluded_ingredients=None
+):
+    if included_ingredients is None:
+        included_ingredients = []
+    if excluded_ingredients is None:
+        excluded_ingredients = []
+
     features_df = create_features_vectorized(ingredients_list)
     predictions_df = pd.DataFrame(0, index=features_df.index, columns=unique_allergens)
 
@@ -187,6 +210,18 @@ def predict_meal_safety_with_diet(ingredients_list, user_allergies, diet_prefere
     if meal_time and meal_time in meal_time_keywords:
         safe_meals = safe_meals[safe_meals[meal_time] == 1]
 
+    # Apply excluded ingredients filter with partial matching
+    if excluded_ingredients:
+        safe_meals = safe_meals[~safe_meals['ingredients'].apply(
+            lambda ingredients: any(ingredient_in_list(ingredients, excluded) for excluded in excluded_ingredients)
+        )]
+
+    # Apply included ingredients filter with partial matching
+    if included_ingredients:
+        safe_meals = safe_meals[safe_meals['ingredients'].apply(
+            lambda ingredients: all(ingredient_in_list(ingredients, included) for included in included_ingredients)
+        )]
+
     # Prepare the response data
     safe_meals_list = safe_meals['recipeName'].tolist()
 
@@ -199,23 +234,45 @@ def predict():
         return '', 200  # Simply return a 200 OK response for preflight requests
 
     if request.method == 'GET':
-        # For GET requests, extract 'user_id' and 'meal_time' from query parameters
-        user_id = request.args.get('user_id', default='S7Hehcqz6qhhy38ZemmEg2tKPki2')  # Default user ID for testing
+        # Extract parameters from query parameters
+        user_id = request.args.get('user_id', default='S7Hehcqz6qhhy38ZemmEg2tKPki2')
         meal_time = request.args.get('meal_time', default=None)
-        print(f"GET request received with user_id: {user_id}, meal_time: {meal_time}")
+        excluded_ingredients = request.args.get('excluded_ingredients', default=None)
+        included_ingredients = request.args.get('included_ingredients', default=None)
+        print(f"GET request received with user_id: {user_id}, meal_time: {meal_time}, "
+              f"excluded_ingredients: {excluded_ingredients}, included_ingredients: {included_ingredients}")
 
     elif request.method == 'POST':
-        # For POST requests, extract 'user_id' and 'meal_time' from JSON body
+        # Extract parameters from JSON body
         data = request.json
         user_id = data.get('user_id')
         meal_time = data.get('meal_time')
-        print(f"POST request received with user_id: {user_id}, meal_time: {meal_time}")
+        excluded_ingredients = data.get('excluded_ingredients')
+        included_ingredients = data.get('included_ingredients')
+        print(f"POST request received with user_id: {user_id}, meal_time: {meal_time}, "
+              f"excluded_ingredients: {excluded_ingredients}, included_ingredients: {included_ingredients}")
 
     # Normalize and validate meal_time
     if meal_time:
         meal_time = meal_time.lower()
         if meal_time not in meal_time_keywords:
             return jsonify({"error": f"Invalid meal_time '{meal_time}'. Valid options are 'breakfast', 'lunch', or 'dinner'."}), 400
+
+    # Normalize and validate excluded_ingredients
+    if excluded_ingredients:
+        excluded_ingredients = normalize_ingredient_list(excluded_ingredients)
+        if excluded_ingredients is None:
+            return jsonify({"error": "Invalid format for 'excluded_ingredients'. Must be a string or a list."}), 400
+    else:
+        excluded_ingredients = []
+
+    # Normalize and validate included_ingredients
+    if included_ingredients:
+        included_ingredients = normalize_ingredient_list(included_ingredients)
+        if included_ingredients is None:
+            return jsonify({"error": "Invalid format for 'included_ingredients'. Must be a string or a list."}), 400
+    else:
+        included_ingredients = []
 
     # Initialize Firestore and fetch user data
     db = initialize_firestore()
@@ -238,12 +295,14 @@ def predict():
     activity_level = user_data.get('activity')
     goal = user_data.get('goal')
 
-    # Perform meal safety prediction with meal_time
+    # Perform meal safety prediction with filters
     safe_meals = predict_meal_safety_with_diet(
         meals_df['ingredients'],
         user_allergies,
         diet_preference,
-        meal_time
+        meal_time,
+        included_ingredients,
+        excluded_ingredients
     )
 
     # Calculate daily caloric needs
@@ -254,4 +313,3 @@ def predict():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5001)), debug=True)
-
